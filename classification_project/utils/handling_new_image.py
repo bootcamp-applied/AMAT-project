@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
-from visualization import Visualization
-import matplotlib as plt
+from classification_project.visualization.visualization import Visualization
 import os
 import cv2
 import csv
-from ipywidgets import interact
+#from ipywidgets import interact
 
 class DataNewImage:
 
@@ -61,5 +60,4 @@ class DataNewImage:
             df.insert(0, 'is_train', 1)
             label = self.label
             df.insert(1, 'label', label)
-
             writer.writerows(df.values)
