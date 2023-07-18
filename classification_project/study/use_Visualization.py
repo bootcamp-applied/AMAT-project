@@ -31,6 +31,6 @@ class Use_Visualization:
 
     @staticmethod
     def pareto_to_df_label(df):
-        with open('dict.json') as f:
+        with open(r'C:\Users\Rut Katzir\PycharmProjects\AMAT-project\classification_project\utils\dict.json') as f:
             data = json.load(f)
         Visualization.Pareto(df['label'],data)
