@@ -1,8 +1,7 @@
 from ..visualization.visualization import Visualization
 from ..preprocessing.preprocessing import Preprocessing
 
-import pandas as pd
-import numpy as np
+import json
 
 class Use_Visualization:
     @staticmethod
@@ -32,4 +31,6 @@ class Use_Visualization:
 
     @staticmethod
     def pareto_to_df_label(df):
-        Visualization.Pareto(df['label'])
+        with open('dict.json') as f:
+            data = json.load(f)
+        Visualization.Pareto(df['label'],data)
