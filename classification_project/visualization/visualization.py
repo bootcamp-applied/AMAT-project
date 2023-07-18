@@ -23,7 +23,8 @@ class Visualization:
         plt.show()
 
     @staticmethod
-    def Pareto(y):
+    @staticmethod
+    def Pareto(y, dict_keys):
         # Count the number of samples per class
         class_counts = np.bincount(y)
 
@@ -40,11 +41,13 @@ class Visualization:
 
         # Plot the Pareto chart
         plt.figure(figsize=(8, 6))
-        plt.bar(sorted_classes, sorted_percentages, color='blue')
-#         plt.plot(sorted_classes, cumulative_percentage, 'r-o')
+        # plt.bar(sorted_classes, sorted_percentages, color='blue')
+        #         plt.plot(sorted_classes, cumulative_percentage, 'r-o')
+        plt.bar([dict_keys[str(cls)] for cls in sorted_classes], sorted_percentages, color='blue')
         plt.xlabel('Class')
         plt.ylabel('Percentage')
         plt.title('Pareto Chart')
+        plt.ylim(0, 100)  # Set the y-axis limits from 0 to 100
         plt.show()
 
     @staticmethod
