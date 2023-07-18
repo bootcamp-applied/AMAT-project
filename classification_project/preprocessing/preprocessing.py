@@ -49,13 +49,19 @@ class Preprocessing:
     def __init__(self, data):
         self.data = data
 
-    def split_data(self, include_validation=True):
+    def split_data(self, include_validation=True, one_hot_encoder=False):
         train = self.data[self.data['is_train'] == 1]
         test = self.data[self.data['is_train'] == 0]
+
         x_train = train.drop(['label', 'is_train'], axis=1).values.reshape((-1, 32, 32, 3))
         y_train = train['label'].values
+
         x_test = test.drop(['label', 'is_train'], axis=1).values.reshape((-1, 32, 32, 3))
         y_test = test['label'].values
+
+        if one_hot_encoder:
+            y_train = to_categorical(train['label'])
+            y_test = to_categorical(test['label'])
 
         if include_validation:
             x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.3)
@@ -69,8 +75,12 @@ class Preprocessing:
     def clean_data(self):
         self.data = self.data[~(self.data > 255).any(axis=1)]
 
+
     def prepare_data(self):
         self.clean_data()
         self.normalize_data()
-        self.data['label'] = to_categorical(self.data['label'])
+        # self.label_encoding()
+
+
+
 
