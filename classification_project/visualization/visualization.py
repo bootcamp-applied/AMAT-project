@@ -7,19 +7,26 @@ from sklearn.metrics import confusion_matrix
 
 class Visualization:
     @staticmethod
-    def TSNE(X, y, title=None):
-        # Perform TSNE on the data
-        tsne = TSNE(n_components=2, random_state=42, perplexity=45)
-        X_embedded = tsne.fit_transform(X)
-        # Create a scatter plot of the data points with different colors for each class
-        plt.figure(figsize=(8, 6))
-        classes = np.unique(y)
-        colors = plt.cm.rainbow(np.linspace(0, 1, len(classes)))
-        for i, c in zip(classes, colors):
-            plt.scatter(X_embedded[y == i, 0], X_embedded[y == i, 1], color=c, label=str(i))
-        plt.legend(title='Class')
-        if title:
-            plt.title(title)
+    def TSNE(features, labels, title=None):
+        # Apply t-SNE
+        tsne = TSNE(n_components=2, random_state=0)
+
+        test_representations_2d = tsne.fit_transform(features)
+
+        # Create a plot
+        plt.figure(figsize=(10,10))
+        scatter = plt.scatter(test_representations_2d[:, 0], test_representations_2d[:, 1], c=labels.flatten(), cmap='tab10')
+
+        # Create a legend with class names
+        class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+        legend1 = plt.legend(*scatter.legend_elements(num=10), title="Classes")
+        plt.gca().add_artist(legend1)
+
+        # Convert labels to class names
+        class_indices = [int(label.get_text().split("{")[-1].split("}")[0]) for label in legend1.texts]
+        for t, class_index in zip(legend1.texts, class_indices):
+            t.set_text(class_names[class_index])
+
         plt.show()
 
     @staticmethod
