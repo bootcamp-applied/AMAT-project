@@ -63,11 +63,3 @@ class Visualization:
         plt.ylabel('True label')
         plt.title('Confusion Matrix')
         plt.show()
-
-
-df = pd.read_csv('../DAL/cifar_10_100_db.csv')
-
-X = df.drop(['label', 'is_train'], axis=1)
-y = df['label']
-
-Visualization().TSNE(X,y)

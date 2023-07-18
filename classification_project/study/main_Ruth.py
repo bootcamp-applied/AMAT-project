@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from visualization import Visualization
-from preprocessing import PreProcessing
+from preprocessing import Preprocessing
 
 if __name__ == '__main__':
     # Read the CSV file into a DataFrame
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # Visualization.TSNE(x, y)
 
     #Visualization.Pareto(y)
-    data = PreProcessing(df)
+    data = Preprocessing(df)
     x_train, y_train, x_val, y_val, x_test, y_test = data.split_only()
     # y_train = y_train.flatten()
     # y_val= y_val.flatten()

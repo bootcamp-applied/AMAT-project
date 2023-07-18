@@ -19,8 +19,8 @@ class DataHandlerCifar10:
         return df
     def load_data_to_csv(self):
         train_files = '../../data/raw/cifar-10-batches-py/data_batch_'
-        test_file =  '../../data/raw/cifar-10-batches-py/test_batch'
-        write_to_path =  '../../data/processed/cifar-10.csv'
+        test_file = '../../data/raw/cifar-10-batches-py/test_batch'
+        write_to_path = '../../data/processed/cifar-10.csv'
         if os.path.exists(write_to_path):
             os.remove(write_to_path)
         with open(write_to_path, 'a', newline='') as file:
@@ -37,5 +37,5 @@ class DataHandlerCifar10:
                     writer.writerows(df.values)
 
             data_test_dict = self.unpickele(test_file)
-            df = self.convert_dict_to_df(data_test_dict, 1)
+            df = self.convert_dict_to_df(data_test_dict, 0)
             writer.writerows(df.values)
