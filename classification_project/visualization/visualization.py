@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.manifold import TSNE
 from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 
 class Visualization:
@@ -41,9 +42,10 @@ class Visualization:
 
         # Plot the Pareto chart
         plt.figure(figsize=(8, 6))
-        # plt.bar(sorted_classes, sorted_percentages, color='blue')
-        #         plt.plot(sorted_classes, cumulative_percentage, 'r-o')
         plt.bar([dict_keys[str(cls)] for cls in sorted_classes], sorted_percentages, color='blue')
+        for i, cls in enumerate(sorted_classes):
+            plt.text(i, sorted_percentages[i], str(class_counts[cls]), ha='center', va='bottom')
+
         plt.xlabel('Class')
         plt.ylabel('Percentage')
         plt.title('Pareto Chart')
@@ -51,18 +53,6 @@ class Visualization:
         plt.show()
 
     @staticmethod
-    def Confusion_matrix(y_true, y_pred, classes):
-        # Compute the confusion matrix
-        cm = confusion_matrix(y_true, y_pred)
-
-        # Create a heatmap of the confusion matrix
-        plt.figure(figsize=(8, 6))
-        plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-        plt.colorbar()
-        tick_marks = np.arange(len(classes))
-        plt.xticks(tick_marks, classes, rotation=45)
-        plt.yticks(tick_marks, classes)
-        plt.xlabel('Predicted label')
-        plt.ylabel('True label')
-        plt.title('Confusion Matrix')
-        plt.show()
+    def Confusion_matrix(y_true, y_pred, class_names):
+        ax = sns.heatmap(confusion_matrix(y_true, y_pred), annot=True, cmap='Blues',
+                         xticklabels=class_names, yticklabels=class_names)
