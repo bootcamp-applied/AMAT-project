@@ -19,8 +19,9 @@ def convert_dict_to_df(data, is_train):
 class DataHandlerCifar100:
 
     def load_data_to_csv(self):
-        train_file = "../datasets/cifar-100-python/train"
-        test_file = "../datasets/cifar-100-python/test"
+
+        train_file = '../../data/raw/cifar-100-python/train'
+        test_file = '../../data/raw/cifar-100-python/test'
 
         train_data = unpickle(train_file)
         test_data = unpickle(test_file)
@@ -29,7 +30,7 @@ class DataHandlerCifar100:
         test_df = convert_dict_to_df(test_data, 0)
         df = pd.concat([train_df, test_df], ignore_index=True)
 
-        path = '../DAL/cifar-100-df.csv'
+        path = '../../data/processed/cifar-100.csv'
 
         if os.path.exists(path):
             # If the file exists, delete it

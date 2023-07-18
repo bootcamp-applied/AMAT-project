@@ -1,15 +1,14 @@
 import pandas as pd
 import os
 
-
 class DataHandlerCifar10Cifar100:
     def __init__(self):
         self.cifar_10_db = None
         self.cifar_100_db = None
 
     def read_from_csv(self):
-        path_cifar_10 = '../DAL/cifar-10-df.csv'
-        path_cifar_100 = '../DAL/cifar-100-df.csv'
+        path_cifar_10 = '../../data/processed/cifar-10.csv'
+        path_cifar_100 = '../../data/processed/cifar-100.csv'
         df_cifar_10 = pd.read_csv(path_cifar_10)
         df_cifar_100 = pd.read_csv(path_cifar_100)
         return df_cifar_10, df_cifar_100
@@ -27,7 +26,7 @@ class DataHandlerCifar10Cifar100:
 
         # concat cifar 10 with cifar 100
         merged_df = pd.concat([self.cifar_10_db, self.cifar_100_db])
-        path = '../DAL/cifar_10_100_db.csv'
+        path = '../../data/processed/cifar-10-100.csv'
 
         if os.path.exists(path):
             # If the file exists, delete it
