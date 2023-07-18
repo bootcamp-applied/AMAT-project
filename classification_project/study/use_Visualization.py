@@ -1,7 +1,7 @@
 from ..visualization.visualization import Visualization
 from ..preprocessing.preprocessing import Preprocessing
-
 import json
+import os
 
 class Use_Visualization:
     @staticmethod
@@ -31,6 +31,14 @@ class Use_Visualization:
 
     @staticmethod
     def pareto_to_df_label(df):
+        file_path = os.path.join("classification_project", "utils", "dict.json")
         with open(r'C:\Users\Rut Katzir\PycharmProjects\AMAT-project\classification_project\utils\dict.json') as f:
             data = json.load(f)
         Visualization.Pareto(df['label'],data)
+
+    @staticmethod
+    def Confusion_matrix_cifar_10_100(y_true,y_pred):
+        with open(r'C:\Users\Rut Katzir\PycharmProjects\AMAT-project\classification_project\utils\dict.json') as f:
+            data = json.load(f)
+        class_names = list(data.values())
+        Visualization.Confusion_matrix(y_true,y_pred,class_names)

@@ -54,5 +54,5 @@ class Visualization:
 
     @staticmethod
     def Confusion_matrix(y_true, y_pred, class_names):
-        ax = sns.heatmap(confusion_matrix(y_true, y_pred), annot=True, cmap='Blues',
+        ax = sns.heatmap(confusion_matrix(y_true, y_pred), fmt=".0f", annot=True, cmap='Blues',
                          xticklabels=class_names, yticklabels=class_names)
