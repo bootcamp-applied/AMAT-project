@@ -5,7 +5,7 @@ from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_i
 from classification_project.preprocessing.preprocessing import Preprocessing
 from classification_project.visualization.visualization import Visualization
 
-df = pd.read_csv('../../data/processed/cifar-10-100.csv')
+df = pd.read_csv('../../data/processed/cifar-10.csv')
 preprocessing = Preprocessing(df)
 x_test, y_train, x_test, y_test = preprocessing.split_data(include_validation=False)
 train_images = x_test
