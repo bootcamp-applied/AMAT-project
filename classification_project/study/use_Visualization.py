@@ -1,7 +1,7 @@
 import csv
-
+from ..utils.add_imgs_cifar_100 import plot_images
 import numpy as np
-import pandas as pd
+# import pandas as pd
 import matplotlib.pyplot as plt
 
 from ..visualization.visualization import Visualization
@@ -67,8 +67,10 @@ def plot_images_to_given_label(label):
                 selected_rows.append(row_values[2:])
                 if len(selected_rows) == rows_to_read:
                     break
-    image = np.array(selected_rows[2], dtype=np.float32).reshape(3, 32, 32)
-    image = image.transpose(1, 2, 0)
-    # image = np.array(selected_rows[0], dtype=np.float32).reshape(32, 32, 3).transpose(1, 2, 0)
-    plt.imshow(image)
-    plt.show()
+    images_to_plot = []
+    for image_id in range(len(selected_rows)):
+        image = np.array(selected_rows[image_id], dtype=np.int32)
+        image = image.reshape(3, 32, 32).transpose(1, 2, 0)
+        images_to_plot.append(image)
+
+    plot_images(images_to_plot)
