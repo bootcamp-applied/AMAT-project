@@ -7,8 +7,6 @@ preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
 
-
-
 model = CNN()
 model.train(x_train, y_train, x_val, y_val)
 
