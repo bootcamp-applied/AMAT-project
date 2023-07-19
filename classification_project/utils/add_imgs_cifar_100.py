@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import json
 
 def plot_images():
     # plotting the first img
@@ -9,7 +10,7 @@ def plot_images():
     image = pixels.values.reshape(3, 32, 32).transpose(1, 2, 0)
     plt.imshow(image)
     plt.show()
-
     #get 5 random images
     random_rows = df.sample(n=10)
     #pixel_columns = random_rows.iloc[,2:]
+

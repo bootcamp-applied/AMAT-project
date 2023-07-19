@@ -1,3 +1,9 @@
+import csv
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
 from ..visualization.visualization import Visualization
 from ..preprocessing.preprocessing import Preprocessing
 import json
@@ -42,3 +48,27 @@ class Use_Visualization:
             data = json.load(f)
         class_names = list(data.values())
         Visualization.Confusion_matrix(y_true,y_pred,class_names)
+
+
+def plot_images_to_given_label(label):
+    map_label = '../utils/dict.json'
+    with open(map_label, 'r') as f:
+        label_dict = json.load(f)
+    label_key = next((key for key, val in label_dict.items() if val == label), None)
+    csv_file_path = '../../data/processed/cifar-10-100.csv'
+    # selected_r = data[data['label'] == str(label_key)]
+    rows_to_read = 9
+    selected_rows = []
+    with open(csv_file_path, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['label'] == str(label_key):
+                row_values = list(row.values())
+                selected_rows.append(row_values[2:])
+                if len(selected_rows) == rows_to_read:
+                    break
+    image = np.array(selected_rows[2], dtype=np.float32).reshape(3, 32, 32)
+    image = image.transpose(1, 2, 0)
+    # image = np.array(selected_rows[0], dtype=np.float32).reshape(32, 32, 3).transpose(1, 2, 0)
+    plt.imshow(image)
+    plt.show()
