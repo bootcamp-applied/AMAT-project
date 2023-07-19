@@ -27,7 +27,12 @@ class DataNewImage:
 
         if shape[0] != shape[1]:
             new_shape = min(shape[0], shape[1])
-            self.new_image = self.new_image[:new_shape, :new_shape, :]
+            cut = (max(shape[0], shape[1]) - new_shape)/2
+            end = shape[1]-cut
+            if(shape[0] < shape[1]):
+                self.new_image = self.new_image[:, cut:end, :]
+            else:
+                self.new_image = self.new_image[cut:end, :, :]
 
         shape = self.new_image.shape
 
