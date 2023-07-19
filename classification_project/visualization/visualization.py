@@ -1,10 +1,9 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 from sklearn.manifold import TSNE
 from sklearn.metrics import confusion_matrix
-# import seaborn as sns
-
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, log_loss, f1_score, roc_curve, auc, precision_recall_curve
 
 class Visualization:
     @staticmethod
@@ -62,3 +61,113 @@ class Visualization:
     def Confusion_matrix(y_true, y_pred, class_names):
         ax = sns.heatmap(confusion_matrix(y_true, y_pred), fmt=".0f", annot=True, cmap='Blues',
                          xticklabels=class_names, yticklabels=class_names)
+
+    def show_downsampled_image(img, new_img):
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 10))
+        ax[0].imshow(img)
+        ax[0].set_title('Original Image')
+        ax[1].imshow(new_img)
+        ax[1].set_title("New Image")
+        plt.show()
+
+    @staticmethod
+    def plot_learning_curve(history):
+        train_accuracy = history.history['accuracy']
+        val_accuracy = history.history['val_accuracy']
+        train_loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        epochs = range(1, len(train_accuracy) + 1)
+
+        plt.figure(figsize=(10, 4))
+
+        plt.subplot(1, 2, 1)
+        plt.plot(epochs, train_accuracy, 'o-', label='Training Accuracy')
+        plt.plot(epochs, val_accuracy, 'o-', label='Validation Accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.title('Learning Curve - Accuracy')
+        plt.legend()
+
+        plt.subplot(1, 2, 2)
+        plt.plot(epochs, train_loss, 'o-', label='Training Loss')
+        plt.plot(epochs, val_loss, 'o-', label='Validation Loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.title('Learning Curve - Loss')
+        plt.legend()
+
+        plt.tight_layout()
+        plt.show()
+
+    # Function to plot the ROC Curve
+    @staticmethod
+    def plot_roc_curve(model, X, y):
+        y_prob = model.predict(X)
+        fpr, tpr, _ = roc_curve(y, y_prob)
+        roc_auc = auc(fpr, tpr)
+
+        plt.figure()
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('ROC Curve')
+        plt.legend(loc='lower right')
+        plt.show()
+
+    # Function to plot the Precision-Recall Curve
+    @staticmethod
+    def plot_precision_recall_curve(model, X, y):
+        y_prob = model.predict(X)
+        precision, recall, _ = precision_recall_curve(y, y_prob)
+        pr_auc = auc(recall, precision)
+
+        plt.figure()
+        plt.plot(recall, precision, lw=2, label='Precision-Recall curve (area = %0.2f)' % pr_auc)
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.title('Precision-Recall Curve')
+        plt.legend(loc='best')
+        plt.show()
+
+    # Function to calculate validation metrics
+    @staticmethod
+    def calculate_validation_metrics(model, X_val, y_val):
+        y_prob = model.predict(X_val)
+        y_pred = (y_prob > 0.5).astype(int)
+        accuracy = accuracy_score(y_val, y_pred)
+        loss = log_loss(y_val, y_prob)
+        f1 = f1_score(y_val, y_pred)
+        return accuracy, loss, f1
+
+    # Function to plot convergence graphs for a classification model
+    @staticmethod
+    def plot_convergence_graphs(history):
+        train_accuracy = history.history['accuracy']
+        val_accuracy = history.history['val_accuracy']
+        train_loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        epochs = range(1, len(train_accuracy) + 1)
+
+        plt.figure(figsize=(10, 4))
+
+        plt.subplot(1, 2, 1)
+        plt.plot(epochs, train_accuracy, 'o-', label='Training Accuracy')
+        plt.plot(epochs, val_accuracy, 'o-', label='Validation Accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.title('Training and Validation Accuracy vs. Epoch')
+        plt.legend()
+
+        plt.subplot(1, 2, 2)
+        plt.plot(epochs, train_loss, 'o-', label='Training Loss')
+        plt.plot(epochs, val_loss, 'o-', label='Validation Loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.title('Training and Validation Loss vs. Epoch')
+        plt.legend()
+
+        plt.tight_layout()
+        plt.show()
