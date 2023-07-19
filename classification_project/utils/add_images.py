@@ -1,4 +1,4 @@
-from classification_project.utils.handling_new_image import ../../dataNewImage
+from classification_project.utils.handling_new_image import dataNewImage
 
 def useNewImage():
     add_image = dataNewImage()
