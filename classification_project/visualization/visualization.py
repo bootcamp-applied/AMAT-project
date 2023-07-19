@@ -62,3 +62,11 @@ class Visualization:
     def Confusion_matrix(y_true, y_pred, class_names):
         ax = sns.heatmap(confusion_matrix(y_true, y_pred), fmt=".0f", annot=True, cmap='Blues',
                          xticklabels=class_names, yticklabels=class_names)
+
+    def show_downsampled_image(img, new_img):
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 10))
+        ax[0].imshow(img)
+        ax[0].set_title('Original Image')
+        ax[1].imshow(new_img)
+        ax[1].set_title("New Image")
+        plt.show()

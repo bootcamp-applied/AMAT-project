@@ -17,6 +17,7 @@ class DataNewImage:
         self.label = label
         # read image from path
         self.new_image = cv2.imread(image_path)
+
         # change from GBR to RGB
         self.new_image = cv2.cvtColor(self.new_image, cv2.COLOR_BGR2RGB)
 
@@ -27,8 +28,8 @@ class DataNewImage:
 
         if shape[0] != shape[1]:
             new_shape = min(shape[0], shape[1])
-            cut = (max(shape[0], shape[1]) - new_shape)/2
-            end = shape[1]-cut
+            cut = int((max(shape[0], shape[1]) - new_shape)/2)
+            end = int(shape[1]-cut)
             if(shape[0] < shape[1]):
                 self.new_image = self.new_image[:, cut:end, :]
             else:
@@ -56,9 +57,9 @@ class DataNewImage:
         Visualization.show_downsampled_image(origin_img, self.new_image)
 
         # write to df
-        with open('df','a', newline='') as file:
+        write_to_path = '../../data/processed/cifar-10-100.csv'
+        with open(write_to_path,'a', newline='') as file:
             writer = csv.writer(file)
-            write_to_path= '../DAL/cifar_10_100_db.csv'
             # write the image to csv
             img_row = self.new_image.reshape(1,3072)
             df = pd.DataFrame(img_row)
