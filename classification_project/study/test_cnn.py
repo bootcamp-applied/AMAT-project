@@ -7,9 +7,15 @@ preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
 
-model = CNN()
-model.train(x_train, y_train, x_val, y_val)
+# loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.h5')
+# loaded_history_model = CNN.load_cnn_history('../saved_model/saved_cnn_history.pkl')
 
-accuracy = model.evaluate_accuracy(x_test, y_test)
+cnn_model = CNN()
+history = cnn_model.train(x_train, y_train, x_val, y_val)
+
+cnn_model.save_model('../saved_model/saved_cnn_model.keras')
+cnn_model.save_history('../saved_model/saved_cnn_history.pkl')
+
+accuracy = cnn_model.evaluate_accuracy(x_test, y_test)
 print("Test accuracy:", accuracy)
 

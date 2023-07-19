@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 
-
 path_cifar_10 = '../../data/processed/cifar-10.csv'
 df_cifar_10 = pd.read_csv(path_cifar_10)
 
