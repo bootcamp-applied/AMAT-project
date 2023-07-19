@@ -21,10 +21,6 @@ def plot_images(images):
 
     # Show the plot
     plt.show()
-    #get 5 random images
-    random_rows = df.sample(n=10)
-    #pixel_columns = random_rows.iloc[,2:]
-
 
 
 def load_new_images(num_rows=10):
