@@ -53,10 +53,11 @@ class Preprocessing:
         train = self.data[self.data['is_train'] == 1]
         test = self.data[self.data['is_train'] == 0]
 
-        x_train = train.drop(['label', 'is_train'], axis=1).values.reshape((-1, 32, 32, 3))
+        # important change!!!!
+        x_train = train.drop(['label', 'is_train'], axis=1).values.reshape((-1, 3, 32, 32)).transpose(0,2,3,1) # ((-1, 32, 32, 3))
         y_train = train['label'].values
 
-        x_test = test.drop(['label', 'is_train'], axis=1).values.reshape((-1, 32, 32, 3))
+        x_test = test.drop(['label', 'is_train'], axis=1).values.reshape((-1, 3, 32, 32)).transpose(0,2,3,1) # ((-1, 32, 32, 3))
         y_test = test['label'].values
 
         if one_hot_encoder:

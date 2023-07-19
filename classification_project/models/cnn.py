@@ -10,8 +10,9 @@ class CNN:
         self.batch_size = 32
         self.num_classes = 10
         self.epochs = 50
+        self.input_shape = (32, 32, 3)
+
         # self.epochs = 5
-        # self.input_shape = (32, 32, 3)
         # self.model = Sequential([
         #     Conv2D(32, (3, 3), activation='relu', input_shape=self.input_shape),
         #     MaxPooling2D((2, 2)),
