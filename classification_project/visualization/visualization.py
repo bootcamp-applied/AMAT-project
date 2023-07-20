@@ -4,6 +4,8 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, log_loss, f1_score, roc_curve, auc, precision_recall_curve
+from sklearn.preprocessing import label_binarize
+
 
 class Visualization:
     @staticmethod
@@ -77,7 +79,6 @@ class Visualization:
         train_loss = history.history['loss']
         val_loss = history.history['val_loss']
         epochs = range(1, len(train_accuracy) + 1)
-
         plt.figure(figsize=(10, 4))
 
         plt.subplot(1, 2, 1)
@@ -102,18 +103,37 @@ class Visualization:
     # Function to plot the ROC Curve
     @staticmethod
     def plot_roc_curve(model, X, y):
+        # Convert y to one-hot encoded form (binary format for each class)
+        unique_classes = np.unique(y)
+        y_bin = label_binarize(y, classes=unique_classes)
+        # Predict probabilities for each class
         y_prob = model.predict(X)
-        fpr, tpr, _ = roc_curve(y, y_prob)
-        roc_auc = auc(fpr, tpr)
 
+        # Compute ROC curve and ROC area for each class
+        fpr = dict()
+        tpr = dict()
+        roc_auc = dict()
+        for i in range(len(unique_classes)):
+            fpr[i], tpr[i], _ = roc_curve(y_bin[:, i], y_prob[:, i])
+            roc_auc[i] = auc(fpr[i], tpr[i])
+
+        # Micro-average ROC curve and ROC area
+        fpr["micro"], tpr["micro"], _ = roc_curve(y_bin.ravel(), y_prob.ravel())
+        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+        # Plot ROC curves
         plt.figure()
-        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+        plt.plot(fpr["micro"], tpr["micro"], color='deeppink', linestyle=':', lw=4,
+                 label='Micro-average ROC curve (area = {0:0.2f})' ''.format(roc_auc["micro"]))
+        for i in range(len(unique_classes)):
+            plt.plot(fpr[i], tpr[i], lw=2, label='ROC curve of class {0} (area = {1:0.2f})' ''.format(unique_classes[i], roc_auc[i]))
+
         plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve')
+        plt.title('ROC Curve for Multi-class Classification')
         plt.legend(loc='lower right')
         plt.show()
 
