@@ -140,28 +140,70 @@ class Visualization:
     # Function to plot the Precision-Recall Curve
     @staticmethod
     def plot_precision_recall_curve(model, X, y):
-        y_prob = model.predict(X)
-        precision, recall, _ = precision_recall_curve(y, y_prob)
-        pr_auc = auc(recall, precision)
+        # Convert y to one-hot encoded form (binary format for each class)
+        y_bin = label_binarize(y, classes=np.unique(y))
 
+        # Predict probabilities for each class
+        y_prob = model.predict(X)
+
+        # Compute precision-recall curve and area for each class
+        precision = dict()
+        recall = dict()
+        pr_auc = dict()
+        for i in range(len(np.unique(y))):
+            precision[i], recall[i], _ = precision_recall_curve(y_bin[:, i], y_prob[:, i])
+            pr_auc[i] = auc(recall[i], precision[i])
+
+        # Micro-average precision-recall curve and area
+        precision["micro"], recall["micro"], _ = precision_recall_curve(y_bin.ravel(), y_prob.ravel())
+        pr_auc["micro"] = auc(recall["micro"], precision["micro"])
+
+        # Plot precision-recall curves
         plt.figure()
-        plt.plot(recall, precision, lw=2, label='Precision-Recall curve (area = %0.2f)' % pr_auc)
+        plt.plot(recall["micro"], precision["micro"], color='deeppink', linestyle=':', lw=4,
+                 label='Micro-average Precision-Recall curve (area = {0:0.2f})' ''.format(pr_auc["micro"]))
+        for i in range(len(np.unique(y))):
+            plt.plot(recall[i], precision[i], lw=2,
+                     label='Precision-Recall curve of class {0} (area = {1:0.2f})' ''.format(i, pr_auc[i]))
+
         plt.xlabel('Recall')
         plt.ylabel('Precision')
-        plt.title('Precision-Recall Curve')
+        plt.title('Precision-Recall Curve for Multi-class Classification')
         plt.legend(loc='best')
         plt.show()
+    # def plot_precision_recall_curve(model, X, y):
+    #     y_prob = model.predict(X)
+    #     precision, recall, _ = precision_recall_curve(y, y_prob)
+    #     pr_auc = auc(recall, precision)
+    #
+    #     plt.figure()
+    #     plt.plot(recall, precision, lw=2, label='Precision-Recall curve (area = %0.2f)' % pr_auc)
+    #     plt.xlabel('Recall')
+    #     plt.ylabel('Precision')
+    #     plt.title('Precision-Recall Curve')
+    #     plt.legend(loc='best')
+    #     plt.show()
 
     # Function to calculate validation metrics
     @staticmethod
+    # def calculate_validation_metrics(model, X_val, y_val):
+    #     y_prob = model.predict(X_val)
+    #     y_pred = (y_prob > 0.5).astype(int)
+    #     accuracy = accuracy_score(y_val, y_pred)
+    #     loss = log_loss(y_val, y_prob)
+    #     f1 = f1_score(y_val, y_pred)
+    #     return accuracy, loss, f1
     def calculate_validation_metrics(model, X_val, y_val):
         y_prob = model.predict(X_val)
         y_pred = (y_prob > 0.5).astype(int)
-        accuracy = accuracy_score(y_val, y_pred)
-        loss = log_loss(y_val, y_prob)
-        f1 = f1_score(y_val, y_pred)
-        return accuracy, loss, f1
 
+        # Convert y_val to binary labels (0 or 1)
+        y_val_binary = (y_val > 0.5).astype(int)
+
+        accuracy = accuracy_score(y_val_binary, y_pred)
+        loss = log_loss(y_val_binary, y_prob)
+        f1 = f1_score(y_val_binary, y_pred)
+        return accuracy, loss, f1
     # Function to plot convergence graphs for a classification model
     @staticmethod
     def plot_convergence_graphs(history):

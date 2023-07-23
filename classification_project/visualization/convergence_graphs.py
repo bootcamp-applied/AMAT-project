@@ -6,7 +6,7 @@ import pandas as pd
 df = pd.read_csv('../../data/processed/cifar-10-100.csv')
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
-x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data()
+x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
 
 
 model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras')
@@ -14,10 +14,10 @@ history = CNN.load_cnn_history('../saved_model/saved_cnn_history.pkl')
 
 # Example usage:
 
-Visualization.plot_learning_curve(history)
-Visualization.plot_roc_curve(model.model, x_val, y_val) # change to handle multi class
-# Visualization.plot_precision_recall_curve(model, x_val, y_val) change to handle multi class
-# accuracy, loss, f1 = Visualization.calculate_validation_metrics(model, x_val, y_val) change to handle multi class
+#Visualization.plot_learning_curve(history)
+#Visualization.plot_roc_curve(model.model, x_val, y_val)
+Visualization.plot_precision_recall_curve(model.model, x_val, y_val)
+accuracy, loss, f1 = Visualization.calculate_validation_metrics(model.model, x_val, y_val)
 
 Visualization.plot_convergence_graphs(history)
 
