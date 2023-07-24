@@ -14,13 +14,12 @@ history = CNN.load_cnn_history('../saved_model/saved_cnn_history.pkl')
 
 # Example usage:
 
-#Visualization.plot_learning_curve(history)
-#Visualization.plot_roc_curve(model.model, x_val, y_val)
-#Visualization.plot_precision_recall_curve_multi_class(model.model, x_val, y_val)
+Visualization.plot_roc_curve(model.model, x_val, y_val)
+Visualization.plot_precision_recall_curve_multi_class(model.model, x_val, y_val)
 
 accuracy, loss, f1 = Visualization.calculate_validation_metrics(model.model, x_val, y_val)
 
-#Visualization.plot_convergence_graphs(history)
+Visualization.plot_convergence_graphs(history)
 
 print("Validation Accuracy:", accuracy)
 print("Validation Loss:", loss)

@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score, log_loss, f1_score, roc_curve, auc, 
 from sklearn.preprocessing import label_binarize
 from sklearn.metrics import precision_recall_curve, average_precision_score
 from sklearn.metrics import accuracy_score, log_loss, f1_score
+from sklearn.metrics import roc_curve, auc, roc_auc_score
 
 class Visualization:
     @staticmethod
@@ -62,8 +63,14 @@ class Visualization:
 
     @staticmethod
     def Confusion_matrix(y_true, y_pred, class_names):
-        ax = sns.heatmap(confusion_matrix(y_true, y_pred), fmt=".0f", annot=True, cmap='Blues',
+        cm = confusion_matrix(y_true, y_pred)
+        plt.figure(figsize=(len(class_names), len(class_names)))
+        ax = sns.heatmap(cm, fmt=".0f", annot=True, cmap='Blues',
                          xticklabels=class_names, yticklabels=class_names)
+        plt.xlabel('Predicted')
+        plt.ylabel('True')
+        plt.title('Confusion Matrix')
+        plt.show()
 
     def show_downsampled_image(img, new_img):
         fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 10))
@@ -73,69 +80,29 @@ class Visualization:
         ax[1].set_title("New Image")
         plt.show()
 
-    @staticmethod
-    def plot_learning_curve(history):
-        train_accuracy = history.history['accuracy']
-        val_accuracy = history.history['val_accuracy']
-        train_loss = history.history['loss']
-        val_loss = history.history['val_loss']
-        epochs = range(1, len(train_accuracy) + 1)
-        plt.figure(figsize=(10, 4))
-
-        plt.subplot(1, 2, 1)
-        plt.plot(epochs, train_accuracy, 'o-', label='Training Accuracy')
-        plt.plot(epochs, val_accuracy, 'o-', label='Validation Accuracy')
-        plt.xlabel('Epochs')
-        plt.ylabel('Accuracy')
-        plt.title('Learning Curve - Accuracy')
-        plt.legend()
-
-        plt.subplot(1, 2, 2)
-        plt.plot(epochs, train_loss, 'o-', label='Training Loss')
-        plt.plot(epochs, val_loss, 'o-', label='Validation Loss')
-        plt.xlabel('Epochs')
-        plt.ylabel('Loss')
-        plt.title('Learning Curve - Loss')
-        plt.legend()
-
-        plt.tight_layout()
-        plt.show()
-
     # Function to plot the ROC Curve
     @staticmethod
     def plot_roc_curve(model, X, y):
-        # Convert y to one-hot encoded form (binary format for each class)
-        unique_classes = np.unique(y)
-        y_bin = label_binarize(y, classes=unique_classes)
-        # Predict probabilities for each class
-        y_prob = model.predict(X)
-
+        # Assuming your model predicts probabilities, use predict_proba
+        y_probs = model.predict(X)
         # Compute ROC curve and ROC area for each class
         fpr = dict()
         tpr = dict()
         roc_auc = dict()
-        for i in range(len(unique_classes)):
-            fpr[i], tpr[i], _ = roc_curve(y_bin[:, i], y_prob[:, i])
+        n_classes = y_probs.shape[1]
+        for i in range(n_classes):
+            fpr[i], tpr[i], _ = roc_curve(y[:, i], y_probs[:, i])
             roc_auc[i] = auc(fpr[i], tpr[i])
-
-        # Micro-average ROC curve and ROC area
-        fpr["micro"], tpr["micro"], _ = roc_curve(y_bin.ravel(), y_prob.ravel())
-        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-
-        # Plot ROC curves
         plt.figure()
-        plt.plot(fpr["micro"], tpr["micro"], color='deeppink', linestyle=':', lw=4,
-                 label='Micro-average ROC curve (area = {0:0.2f})' ''.format(roc_auc["micro"]))
-        for i in range(len(unique_classes)):
-            plt.plot(fpr[i], tpr[i], lw=2, label='ROC curve of class {0} (area = {1:0.2f})' ''.format(unique_classes[i], roc_auc[i]))
-
-        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        for i in range(n_classes):
+            plt.plot(fpr[i], tpr[i], lw=2, label=f'Class {i} (AUC = {roc_auc[i]:.2f})')
+        plt.plot([0, 1], [0, 1], color='gray', lw=1, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve for Multi-class Classification')
-        plt.legend(loc='lower right')
+        plt.title('ROC Curve')
+        plt.legend(loc="lower right")
         plt.show()
 
     # Function to plot the Precision-Recall Curve

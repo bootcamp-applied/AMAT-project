@@ -22,7 +22,6 @@ base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96,
 # Extract features from the images
 test_features = base_model.predict(preprocess_input(test_images))
 
-
 # Flatten the features into 1D vectors
 flat_test_features = test_features.reshape((-1, np.prod(test_features.shape[1:])))
 
