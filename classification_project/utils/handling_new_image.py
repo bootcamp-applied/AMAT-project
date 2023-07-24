@@ -8,7 +8,7 @@ import csv
 
 class DataNewImage:
 
-    def down_sampling_gaussian_filter(self, image, ksize = 5):
+    def down_sampling_gaussian_filter(self, image, ksize=5):
         image = cv2.GaussianBlur(image, (ksize, ksize), 0, 0)
         image = cv2.resize(image, (32, 32), fx=3, fy=3)
         return image
@@ -67,3 +67,4 @@ class DataNewImage:
             label = self.label
             df.insert(1, 'label', label)
             writer.writerows(df.values)
+            
