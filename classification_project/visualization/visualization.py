@@ -4,6 +4,9 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, log_loss, f1_score, roc_curve, auc, precision_recall_curve
+from sklearn.preprocessing import label_binarize
+from sklearn.metrics import precision_recall_curve, average_precision_score
+from sklearn.metrics import accuracy_score, log_loss, f1_score
 
 class Visualization:
     @staticmethod
@@ -77,7 +80,6 @@ class Visualization:
         train_loss = history.history['loss']
         val_loss = history.history['val_loss']
         epochs = range(1, len(train_accuracy) + 1)
-
         plt.figure(figsize=(10, 4))
 
         plt.subplot(1, 2, 1)
@@ -102,46 +104,86 @@ class Visualization:
     # Function to plot the ROC Curve
     @staticmethod
     def plot_roc_curve(model, X, y):
+        # Convert y to one-hot encoded form (binary format for each class)
+        unique_classes = np.unique(y)
+        y_bin = label_binarize(y, classes=unique_classes)
+        # Predict probabilities for each class
         y_prob = model.predict(X)
-        fpr, tpr, _ = roc_curve(y, y_prob)
-        roc_auc = auc(fpr, tpr)
 
+        # Compute ROC curve and ROC area for each class
+        fpr = dict()
+        tpr = dict()
+        roc_auc = dict()
+        for i in range(len(unique_classes)):
+            fpr[i], tpr[i], _ = roc_curve(y_bin[:, i], y_prob[:, i])
+            roc_auc[i] = auc(fpr[i], tpr[i])
+
+        # Micro-average ROC curve and ROC area
+        fpr["micro"], tpr["micro"], _ = roc_curve(y_bin.ravel(), y_prob.ravel())
+        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+        # Plot ROC curves
         plt.figure()
-        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+        plt.plot(fpr["micro"], tpr["micro"], color='deeppink', linestyle=':', lw=4,
+                 label='Micro-average ROC curve (area = {0:0.2f})' ''.format(roc_auc["micro"]))
+        for i in range(len(unique_classes)):
+            plt.plot(fpr[i], tpr[i], lw=2, label='ROC curve of class {0} (area = {1:0.2f})' ''.format(unique_classes[i], roc_auc[i]))
+
         plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve')
+        plt.title('ROC Curve for Multi-class Classification')
         plt.legend(loc='lower right')
         plt.show()
 
     # Function to plot the Precision-Recall Curve
     @staticmethod
-    def plot_precision_recall_curve(model, X, y):
+    def plot_precision_recall_curve_multi_class(model, X, y):
+           # Predict probabilities for each class
         y_prob = model.predict(X)
-        precision, recall, _ = precision_recall_curve(y, y_prob)
-        pr_auc = auc(recall, precision)
 
+        # Compute precision-recall curve and average precision for each label (class)
+        precision = dict()
+        recall = dict()
+        average_precision = dict()
+        for i in range(y.shape[1]):
+            precision[i], recall[i], _ = precision_recall_curve(y[:, i], y_prob[:, i])
+            average_precision[i] = average_precision_score(y[:, i], y_prob[:, i])
+
+        # Micro-average precision-recall curve and average precision
+        precision["micro"], recall["micro"], _ = precision_recall_curve(
+            y.ravel(), y_prob.ravel()
+        )
+        average_precision["micro"] = average_precision_score(y, y_prob, average="micro")
+
+        # Plot precision-recall curves for each label (class)
         plt.figure()
-        plt.plot(recall, precision, lw=2, label='Precision-Recall curve (area = %0.2f)' % pr_auc)
+        plt.plot(recall["micro"], precision["micro"], color='deeppink', linestyle=':', lw=4,
+                 label='Micro-average Precision-Recall curve (area = {0:0.2f})'.format(average_precision["micro"]))
+        for i in range(y.shape[1]):
+            plt.plot(recall[i], precision[i], lw=2,
+                     label='Precision-Recall curve of class {0} (area = {1:0.2f})'.format(i, average_precision[i]))
+
         plt.xlabel('Recall')
         plt.ylabel('Precision')
-        plt.title('Precision-Recall Curve')
+        plt.title('Precision-Recall Curve for Multi-Label Classification')
         plt.legend(loc='best')
         plt.show()
 
-    # Function to calculate validation metrics
     @staticmethod
     def calculate_validation_metrics(model, X_val, y_val):
         y_prob = model.predict(X_val)
         y_pred = (y_prob > 0.5).astype(int)
-        accuracy = accuracy_score(y_val, y_pred)
-        loss = log_loss(y_val, y_prob)
-        f1 = f1_score(y_val, y_pred)
-        return accuracy, loss, f1
 
+        # Convert y_val to binary labels (0 or 1)
+        y_val_binary = (y_val > 0.5).astype(int)
+
+        accuracy = accuracy_score(y_val_binary, y_pred)
+        loss = log_loss(y_val_binary, y_prob)
+        f1 = f1_score(y_val_binary, y_pred, average='samples')  # Use average='samples' for multi-label
+        return accuracy, loss, f1
     # Function to plot convergence graphs for a classification model
     @staticmethod
     def plot_convergence_graphs(history):

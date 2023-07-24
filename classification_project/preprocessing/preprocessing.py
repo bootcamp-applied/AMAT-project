@@ -80,8 +80,3 @@ class Preprocessing:
     def prepare_data(self):
         self.clean_data()
         self.normalize_data()
-        # self.label_encoding()
-
-
-
-
