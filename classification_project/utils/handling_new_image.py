@@ -3,12 +3,13 @@ import numpy as np
 from classification_project.visualization.visualization import Visualization
 import os
 import cv2
+import matplotlib.pyplot as plt
 import csv
 #from ipywidgets import interact
 
 class DataNewImage:
 
-    def down_sampling_gaussian_filter(self, image, ksize = 5):
+    def down_sampling_gaussian_filter(self, image, ksize=5):
         image = cv2.GaussianBlur(image, (ksize, ksize), 0, 0)
         image = cv2.resize(image, (32, 32), fx=3, fy=3)
         return image
@@ -29,7 +30,7 @@ class DataNewImage:
         if shape[0] != shape[1]:
             new_shape = min(shape[0], shape[1])
             cut = int((max(shape[0], shape[1]) - new_shape)/2)
-            end = int(shape[1]-cut)
+            end = int((max(shape[0], shape[1]))-cut)
             if(shape[0] < shape[1]):
                 self.new_image = self.new_image[:, cut:end, :]
             else:
@@ -37,21 +38,7 @@ class DataNewImage:
 
         shape = self.new_image.shape
 
-        #  down-sampling if the new image is too big
 
-        # if shape[0] > 32:
-        #     origin_img = self.new_image
-        #     self.new_image = self.down_sampling_gaussian_filter(self.new_image)
-        #     small_img = self.new_image
-        #     Visualization.show_downsampled_image(origin_img, small_img)
-
-        # Up-sampling if the image is too small
-
-        # if shape[0] < 32:
-        #     origin_img = self.new_image
-        #     self.new_image = cv2.resize(self.new_image, (32, 32), fx=3, fy=3, interpolation=cv2.INTER_CUBIC, ratio=(1, 10))
-        #     big_img = self.new_image
-        #     Visualization.show_downsampled_image(origin_img, big_img)
         origin_img = self.new_image
         self.new_image = cv2.resize(self.new_image, (32, 32), fx=3, fy=3)
         Visualization.show_downsampled_image(origin_img, self.new_image)
@@ -61,9 +48,12 @@ class DataNewImage:
         with open(write_to_path,'a', newline='') as file:
             writer = csv.writer(file)
             # write the image to csv
-            img_row = self.new_image.reshape(1,3072)
+
+            img_row = self.new_image.transpose(2, 0, 1).reshape(1, -1)
+
             df = pd.DataFrame(img_row)
             df.insert(0, 'is_train', 1)
             label = self.label
             df.insert(1, 'label', label)
             writer.writerows(df.values)
+            
