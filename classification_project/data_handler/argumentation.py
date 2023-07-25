@@ -138,7 +138,7 @@ class Argumentation:
     def main():
         file_path = '../../data/processed/cifar-100.csv'
         label_column = 'label'
-        labels_to_read = [1, 2, 17, 13, 4]
+        labels_to_read = [1, 2, 17, 14, 4]
 
         # Load the data
         filtered_df = Argumentation.load_data(file_path, label_column, labels_to_read)
