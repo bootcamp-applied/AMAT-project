@@ -17,6 +17,9 @@ class DataHandlerCifar10Cifar100Argumentation:
     def load_data_to_csv(self):
         self.df_cifar_10_100, self.df_argumentation = self.read_from_csv()
 
+        # new labels
+        self.df_argumentation.label = self.df_argumentation['label'].map({1: 10, 14: 11, 2: 12, 17: 13, 4: 14})
+
         merged_df = pd.concat([self.df_cifar_10_100, self.df_argumentation])
         path = '../../data/processed/cifar-10-100-argumentation.csv'
 
