@@ -1,10 +1,10 @@
 import pandas as pd
 import os
 
-class DataHandlerCifar10Cifar100:
+class DataHandlerCifar10Cifar100Argumentation:
     def __init__(self):
-        self.cifar_10_db = None
-        self.cifar_100_db = None
+        self.cifar_10_100_db = None
+        self.df_argumentation = None
 
     def read_from_csv(self):
         path_argumentation = '../../data/processed/argumentation.csv'
