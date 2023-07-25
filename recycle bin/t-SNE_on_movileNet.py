@@ -5,7 +5,7 @@ from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_i
 from classification_project.preprocessing.preprocessing import Preprocessing
 from classification_project.visualization.visualization import Visualization
 
-df = pd.read_csv('../../data/processed/cifar-10.csv')
+df = pd.read_csv('../data/processed/cifar-10.csv')
 preprocessing = Preprocessing(df)
 x_test, y_train, x_test, y_test = preprocessing.split_data(include_validation=False)
 train_images = x_test
@@ -21,7 +21,6 @@ base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96,
 
 # Extract features from the images
 test_features = base_model.predict(preprocess_input(test_images))
-
 
 # Flatten the features into 1D vectors
 flat_test_features = test_features.reshape((-1, np.prod(test_features.shape[1:])))
