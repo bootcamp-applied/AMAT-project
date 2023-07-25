@@ -1,8 +1,9 @@
-from classification_project.utils.handling_new_image import DataNewImage
+from classification_project.utils.handling_new_image import NewImage
+import cv2
 
 def useNewImage():
-    add_image = DataNewImage()
-    pathes_of_images = {0: r'../../data/raw/new_images/airplan.jpg',
+
+    pathes_of_images = {0: r'../../data/raw/new_images/airplane.jpg',
                         1: r'../../data/raw/new_images/automobile.jpg',
                         2: r'../../data/raw/new_images/bird.jpg',
                         3: r'../../data/raw/new_images/cat.jpg',
@@ -17,6 +18,10 @@ def useNewImage():
                         13: r'../../data/raw/new_images/trees.jpg',
                         14: r'../../data/raw/new_images/vegetables.jpg'
                         }
+    add_image = NewImage()
     for label in pathes_of_images:
-        add_image.read_add_to_df(pathes_of_images[label], label)
+        image = cv2.imread(pathes_of_images[label])
+        add_image.add_image_to_csv(image, label)
+
+
 useNewImage()

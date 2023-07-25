@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
-from dash import Dash, dcc, html, Input, Output
+from dash_image import Dash, dcc, html, Input, Output
 
 from classification_project.study.use_Visualization import plot_images_to_given_label
 
