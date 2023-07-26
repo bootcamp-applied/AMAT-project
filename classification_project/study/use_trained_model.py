@@ -6,7 +6,7 @@ from classification_project.models.CNN2 import CNN2
 from classification_project.visualization.visualization import Visualization
 from classification_project.study.use_Visualization import Use_Visualization
 
-df = pd.read_csv('../../data/processed/cifar-10-100.csv')
+df = pd.read_csv('../../data/processed/cifar-10-100-argumentation.csv')
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
