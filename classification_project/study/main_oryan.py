@@ -7,9 +7,14 @@ from classification_project.models.cnn import CNN
 # from classification_project.study.use_Visualization import plot_images_to_given_label
 from keras.utils import plot_model
 import keras
+
+import albumentations
+
 if __name__ == '__main__':
     # plot_images_to_given_label('airplane')
-    loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras')
+    loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras').model
     # plot_model(loaded_model.model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
     # loaded_model.model.summary()
-    visualkeras.layered_view(loaded_model.model)
+    input_shape = loaded_model.layers[0].input_shape
+    print("Input Shape:", input_shape)
+    # visualkeras.layered_view(loaded_model.model)
