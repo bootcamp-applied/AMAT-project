@@ -13,7 +13,7 @@ x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_ho
 
 loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.h5')
 loaded_model_2 = CNN2.load_cnn_model('../saved_model/saved_cnn_model_2.keras')
-loaded_history_model = CNN.load_cnn_history('../saved_model/saved_cnn_model_2.pkl')
+loaded_history_model = CNN.load_cnn_history('../saved_model/saved_cnn_history.pkl')
 
 accuracy = loaded_model.evaluate_accuracy(x_test,y_test)
 accuracy_2= loaded_model_2.evaluate_accuracy(x_test,y_test)
