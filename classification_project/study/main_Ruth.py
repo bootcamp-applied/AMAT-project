@@ -3,6 +3,8 @@ from classification_project.study.use_Visualization import Use_Visualization
 from classification_project.preprocessing.preprocessing import Preprocessing
 from classification_project.models.cnn import CNN
 import numpy as np
+
+
 if __name__ == '__main__':
 
     df = pd.read_csv('../../data/processed/cifar-10-100.csv')
@@ -16,7 +18,9 @@ if __name__ == '__main__':
     #pareto to train_val_test
     # Use_Visualization.pareto_tarin_val_test(df)
     #load_new_images()
-    y_pred= model.model.predict(x_test)
+    y_pred= model.predict(x_test)
     y_test = np.argmax(y_test, axis=1)
     y_pred = np.argmax(y_pred, axis=1)
     Use_Visualization.Confusion_matrix_cifar_10_100(y_test,y_pred)
+
+
