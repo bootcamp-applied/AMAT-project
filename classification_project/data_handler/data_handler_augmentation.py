@@ -89,7 +89,7 @@ import albumentations as A
 import numpy as np
 import os
 
-class Argumentation:
+class Augmentation:
     @staticmethod
     def load_data(file_path, label_column, labels_to_read):
         # Read the CSV file into a DataFrame
@@ -141,7 +141,7 @@ class Argumentation:
         labels_to_read = [1, 2, 17, 14, 4]
 
         # Load the data
-        filtered_df = Argumentation.load_data(file_path, label_column, labels_to_read)
+        filtered_df = Augmentation.load_data(file_path, label_column, labels_to_read)
 
         is_train = filtered_df.iloc[:, 0:1]
         labels = filtered_df.iloc[:, 1:2]
@@ -158,13 +158,13 @@ class Argumentation:
         images_list = [image.astype(np.float32) / 255.0 for image in images_list]
 
         # Apply augmentation to all 15000 images
-        new_images = Argumentation.apply_augmentation(images_list)
+        new_images = Augmentation.apply_augmentation(images_list)
 
         # Convert to df
-        df = Argumentation.create_new_df(new_images, filtered_df)
+        df = Augmentation.create_new_df(new_images, filtered_df)
 
         # Write the augmentation df to csv
-        path = '../../data/processed/argumentation.csv'
+        path = '../../data/processed/augmentation.csv'
         if os.path.exists(path):
             # If the file exists, delete it
             os.remove(path)
@@ -172,4 +172,4 @@ class Argumentation:
         df.to_csv(path, index=False, encoding='utf-8', mode='w')
 
 if __name__ == "__main__":
-    Argumentation.main()
+    Augmentation.main()

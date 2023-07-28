@@ -7,7 +7,7 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    df = pd.read_csv('../../data/processed/cifar-10-100-argumentation.csv')
+    df = pd.read_csv('../../data/processed/cifar-10-100-augmentation.csv')
     #preprocessing = Preprocessing(df)
    # preprocessing.prepare_data()
    # x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
