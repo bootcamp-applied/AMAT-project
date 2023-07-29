@@ -1,7 +1,7 @@
 import pandas as pd
 from classification_project.study.use_Visualization import Use_Visualization
 from classification_project.preprocessing.preprocessing import Preprocessing
-from classification_project.models.cnn import CNN
+from classification_project.models.CNN1 import CNN
 import numpy as np
 
 
