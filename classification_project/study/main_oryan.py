@@ -1,9 +1,9 @@
 import visualkeras
-from classification_project.models.cnn import CNN
+from classification_project.models.CNN1 import CNN
 from classification_project.study.use_Visualization import plot_images_to_given_label
 import pydot
 import graphviz
-from classification_project.models.cnn import CNN
+from classification_project.models.CNN1 import CNN
 # from classification_project.study.use_Visualization import plot_images_to_given_label
 from keras.utils import plot_model
 import keras

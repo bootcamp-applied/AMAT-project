@@ -1,6 +1,6 @@
 import pandas as pd
 from classification_project.preprocessing.preprocessing import Preprocessing
-from classification_project.models.cnn import CNN
+from classification_project.models.CNN1 import CNN
 from visu_images import Visualization
 
 df = pd.read_csv('../../data/processed/cifar-10-100-argumentation.csv')
