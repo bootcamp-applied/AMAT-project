@@ -5,7 +5,6 @@ from classification_project.utils.load_data import load_data
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
-
 def resnet_block(inputs, filters, strides=1, use_conv_shortcut=False):
     shortcut = inputs
     if use_conv_shortcut:
@@ -84,4 +83,4 @@ test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=0)
 
 print(f"Test accuracy: {test_accuracy:.4f}")
 
-model.save('../saved_model/res_net_18_model.h5')
+model.save('../saved_models/res_net_18_model')

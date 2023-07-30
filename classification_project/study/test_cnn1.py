@@ -10,7 +10,7 @@ x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_ho
 cnn_model = CNN1()
 history = cnn_model.train(x_train, y_train, x_val, y_val)
 
-model_filename = '../saved_model/cnn_model_1.h5'
+model_filename = '../saved_models/cnn_model_1'
 cnn_model.save_model(model_filename)
 
 # Load the training history from the file
