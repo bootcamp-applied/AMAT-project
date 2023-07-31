@@ -6,7 +6,7 @@ from PIL import Image
 from keras.models import Model
 
 from classification_project.preprocessing.preprocessing import Preprocessing
-from classification_project.models.cnn import CNN
+from classification_project.models.CNN1 import CNN
 
 df = pd.read_csv('../../data/processed/cifar-10-100.csv', dtype='int')
 preprocessing = Preprocessing(df)
@@ -15,7 +15,6 @@ x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_ho
 
 loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras')
 loaded_history_model = CNN.load_cnn_history('../saved_model/saved_cnn_history.pkl')
-
 
 feat_extractor = Model(inputs=loaded_model.model.input,
                        outputs=loaded_model.model.get_layer('dense').output)
@@ -44,9 +43,8 @@ for idx, x in enumerate(x_test):
 
 
 plt.imshow(full_image)
-# t-SNE with points
 
-features = features.reshape((-1, np.prod(features.shape[1:]))) #????
+# t-SNE with points
 
 # y_pred = loaded_model.predict(x_test)
 # features = y_pred.reshape((-1, np.prod(y_pred.shape[1:])))
@@ -55,11 +53,12 @@ y_test = np.argmax(y_test, axis = 1)
 labels = np.reshape(y_test, (y_test.shape[0], 1))
 
 tsne = TSNE(n_components=2, random_state=0)
+
 test_representations_2d = tsne.fit_transform(features)
 
 # Create a plot
 plt.figure(figsize=(10,10))
-scatter = plt.scatter(test_representations_2d[:, 0], test_representations_2d[:, 1], c=labels.flatten(), cmap='tab10')
+scatter = plt.scatter(test_representations_2d[:, 0], test_representations_2d[:, 1], c=labels.flatten(), cmap='tab20') # s = 10
 
 # Create a legend with class names
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck', 'fish','people','flowers','trees','fruit and vegetables']
@@ -72,3 +71,5 @@ for t, class_index in zip(legend1.texts, class_indices):
     t.set_text(class_names[class_index])
 
 plt.show()
+print("DASfd")
+print("DASfd")

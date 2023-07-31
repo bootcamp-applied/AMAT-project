@@ -3,7 +3,7 @@ import json
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
-from classification_project.models.cnn import CNN
+from classification_project.models.CNN1 import CNN
 from classification_project.utils.handling_new_image import NewImage
 
 
@@ -14,7 +14,7 @@ def format_image(image):
     image = np.frombuffer(image, np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     handler = NewImage()
-    image, _ = handler.image_handle(image)
+    # image, _ = handler.image_handle(image)
     # flat the image
     new_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # flat_img = new_image.transpose(2, 0, 1).reshape(1, -1)
