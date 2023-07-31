@@ -8,7 +8,6 @@ from classification_project.utils.handling_new_image import NewImage
 
 
 def format_image(image):
-    # resize the image to 32*32*3
     _, image = image.split(',')
     image = base64.b64decode(image)
     # Convert decoded image data to numpy array
@@ -21,7 +20,7 @@ def format_image(image):
     # flat_img = new_image.transpose(2, 0, 1).reshape(1, -1)
     # normalize the values
     nor_image = new_image.astype('float32') / 255
-    nor_image = nor_image.reshape((-1, 3, 32, 32)).transpose(0, 2, 3, 1)
+    nor_image = nor_image.reshape((1, 32, 32, 3))  # .transpose(0, 2, 3, 1)
     plt.imshow(new_image)
     plt.show()
     return nor_image

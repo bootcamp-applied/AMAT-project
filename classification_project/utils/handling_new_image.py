@@ -19,6 +19,7 @@ class NewImage:
     def image_handle(self, image):
         # transform photo's shape to Square
         # If the shape of the image is different from a square
+        new_image = image
         shape = image.shape
         if shape[0] != shape[1]:
             new_shape = min(shape[0], shape[1])
