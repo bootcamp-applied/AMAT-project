@@ -8,14 +8,13 @@ from classification_project.utils.handling_new_image import NewImage
 
 
 def format_image(image):
-    # resize the image to 32*32*3
     _, image = image.split(',')
     image = base64.b64decode(image)
     # Convert decoded image data to numpy array
     image = np.frombuffer(image, np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     handler = NewImage()
-    # image, _ = handler.image_handle(image)
+    image, _ = handler.image_handle(image)
     # flat the image
     new_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # flat_img = new_image.transpose(2, 0, 1).reshape(1, -1)
