@@ -34,12 +34,11 @@ app.layout = html.Div(
     [Input(component_id='upload-data', component_property='contents')]
 )
 def classify_label(contents):
-    label = 'cat'
+    label_mes = ''
     if contents is not None:
-
         formated_image = gui_utils.format_image(contents)
         label = gui_utils.predict_label(formated_image)
-    label_mes = f'Your image label is: {label}'
+        label_mes = f'Your image label is: {label}'
     return label_mes, contents
 
 

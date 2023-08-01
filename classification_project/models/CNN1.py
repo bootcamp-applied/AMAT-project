@@ -12,7 +12,6 @@ class CNN:
         self.num_classes = num_classes
         self.epochs = 50
         self.input_shape = (32, 32, 3)
-
         self.model = Sequential()
         self.model.add(Conv2D(64, (3, 3), padding='same',input_shape=self.input_shape))  # 32*32*64
         self.model.add(Activation('relu'))  # 32*32*64

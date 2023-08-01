@@ -3,25 +3,24 @@ import json
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
-from classification_project.models.CNN1 import CNN
+from classification_project.models.CNN1 import CNN1
 from classification_project.utils.handling_new_image import NewImage
 
 
 def format_image(image):
-    # resize the image to 32*32*3
     _, image = image.split(',')
     image = base64.b64decode(image)
     # Convert decoded image data to numpy array
     image = np.frombuffer(image, np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     handler = NewImage()
-    # image, _ = handler.image_handle(image)
+    image, _ = handler.image_handle(image)
     # flat the image
     new_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # flat_img = new_image.transpose(2, 0, 1).reshape(1, -1)
     # normalize the values
     nor_image = new_image.astype('float32') / 255
-    nor_image = nor_image.reshape((-1, 3, 32, 32)).transpose(0, 2, 3, 1)
+    nor_image = nor_image.reshape(1, 32, 32, 3)
     plt.imshow(new_image)
     plt.show()
     return nor_image
@@ -29,7 +28,7 @@ def format_image(image):
 
 def predict_label(image):
     # load the model
-    loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras').model
+    loaded_model = CNN1.load_cnn_model('../saved_model/saved_cnn_model.keras').model
     probabilities = loaded_model.predict(image)
     label = np.argmax(probabilities)
     label_category = convert_to_category(label)
