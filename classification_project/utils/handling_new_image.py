@@ -3,9 +3,17 @@ import numpy as np
 from classification_project.visualization.visualization import Visualization
 import os
 import cv2
-import matplotlib.pyplot as plt
 import csv
-# from ipywidgets import interact
+#from classification_project.utils.add_imgs_cifar_100 import plot_images
+import matplotlib.pyplot as plt
+
+
+def down_sampling_gaussian_filter(image):
+    origin_img = image
+    image = cv2.GaussianBlur(image, (5, 5), 0, 0)
+    Visualization.show_downsampled_image(origin_img, image)
+    image = cv2.resize(image, (32, 32), fx=3, fy=3)
+    return image
 
 class NewImage:
 
@@ -15,10 +23,7 @@ class NewImage:
         self.label = None
         self.origin_img = None
 
-    def down_sampling_gaussian_filter(self, image, ksize=5):
-        image = cv2.GaussianBlur(image, (ksize, ksize), 0, 0)
-        image = cv2.resize(image, (32, 32), fx=3, fy=3)
-        return image
+
 
     def image_handle(self, image):
         # transform photo's shape to Square
@@ -34,7 +39,7 @@ class NewImage:
 
         # shape = self.new_image.shape
         self.origin_img = new_image
-        new_image = cv2.resize(new_image, (32, 32), fx=3, fy=3)
+        new_image = down_sampling_gaussian_filter(new_image)
         return new_image
 
     def add_image_to_csv(self, image, label):
@@ -44,6 +49,7 @@ class NewImage:
         new_image = self.image_handle(self.image)
         # change from GBR to RGB
         new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
+        self.origin_img = cv2.cvtColor(self.origin_img, cv2.COLOR_BGR2RGB)
         Visualization.show_downsampled_image(self.origin_img, new_image)
         write_to_path = '../../data/processed/cifar-10-100.csv'
         with open(write_to_path, 'a', newline='') as file:
@@ -54,6 +60,8 @@ class NewImage:
             df.insert(0, 'is_train', 1)
             df.insert(1, 'label', self.label)
             writer.writerows(df.values)
-
-
-
+    def test_new_images(self):
+        df = pd.read_csv('../../data/processed/cifar-10-100.csv')
+        last_img = df.iloc[-1, :][2:].values.reshape(3, 32, 32).transpose(1, 2, 0)
+        plt.imshow(last_img)
+        plt.show()

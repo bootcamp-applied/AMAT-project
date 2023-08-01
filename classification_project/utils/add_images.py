@@ -1,9 +1,11 @@
 from classification_project.utils.handling_new_image import NewImage
+import pandas as pd
+import matplotlib.pyplot as plt
 import cv2
 
 def useNewImage():
 
-    pathes_of_images = {0: r'../../data/raw/new_images/airplane.jpg',
+    pathes_of_images = {#0: r'../../data/raw/new_images/airplane.jpg',
                         1: r'../../data/raw/new_images/automobile.jpg',
                         2: r'../../data/raw/new_images/bird.jpg',
                         3: r'../../data/raw/new_images/cat.jpg',
@@ -18,10 +20,16 @@ def useNewImage():
                         13: r'../../data/raw/new_images/trees.jpg',
                         14: r'../../data/raw/new_images/vegetables.jpg'
                         }
+
     add_image = NewImage()
     for label in pathes_of_images:
         image = cv2.imread(pathes_of_images[label])
         add_image.add_image_to_csv(image, label)
+    add_image.test_new_images()
 
 
 useNewImage()
+
+
+
+
