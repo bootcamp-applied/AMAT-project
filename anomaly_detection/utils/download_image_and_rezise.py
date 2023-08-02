@@ -57,7 +57,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 
-def download_and_resize_images(image_urls, resize_shape=(3, 32, 32)):
+def download_and_resize_images(image_urls, resize_shape=(32, 32)):
     """
     Download several images from provided URLs, plot them, and resize the images.
 
@@ -88,7 +88,7 @@ def download_and_resize_images(image_urls, resize_shape=(3, 32, 32)):
         image_array = np.array(image)
 
         # Resize image
-        resized_image = image.resize(resize_shape[1:], Image.BICUBIC)
+        resized_image = image.resize(resize_shape, Image.BICUBIC)
         resized_images.append(np.array(resized_image))
 
         # Plot resized image

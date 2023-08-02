@@ -102,9 +102,14 @@ class Augmentation:
     @staticmethod
     def apply_augmentation(images):
         # Define augmentation transformations
+        # transform = A.Compose([
+        #     A.HorizontalFlip(p=0.5),
+        #     A.Rotate(limit=15),
+        #     A.RandomBrightnessContrast(p=0.2),
+        # ])
         transform = A.Compose([
             A.HorizontalFlip(p=0.5),
-            A.Rotate(limit=15),
+            A.Rotate(limit=15, p=0.1),  # Apply rotation to 10% of the images
             A.RandomBrightnessContrast(p=0.2),
         ])
         augmented_images = [transform(image=image)['image'] for image in images]

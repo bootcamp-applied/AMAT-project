@@ -83,4 +83,19 @@ test_loss, test_accuracy = model.evaluate(x_test, y_test, verbose=0)
 
 print(f"Test accuracy: {test_accuracy:.4f}")
 
-model.save('../saved_models/res_net_18_model')
+
+
+
+import os
+
+save_dir = os.path.join(os.getcwd(), 'saved_models')
+model_name = 'resnet_model_1.h5'
+
+# Save model and weights
+if not os.path.isdir(save_dir):
+    os.makedirs(save_dir)
+model_path = os.path.join(save_dir, model_name)
+model.save(model_path)
+print('Saved trained model at %s ' % model_path)
+
+# model.save('../saved_models/res_net_18_model')

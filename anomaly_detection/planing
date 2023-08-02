@@ -1,0 +1,23 @@
+
+planning:
+- df division:
+    $ read df from data.feather
+    $ add column : 'is_val'
+    for each class put 1 in 20% rows
+    $ create feather file that contains the divison
+- train the models:
+    train as I did, but only if is_val == 0
+-determine the thresholds:
+    for each calss-
+        ^ create df that contains:
+            *1 the val of this class. 'is_from_class' = 1
+            *2 x form the other class(from data). x is the num of *1. 'is_form_class' = 0
+            = half is from this class and half is not
+        ^ take the df and make predictions
+        ^ do true,pred,positive,negative matrix
+        ^ do histogram of the amount of each score (floor to 3 digit after point)
+          the positive in one color and the negative in different.
+
+
+# rows_to_set_one = np.random.choice(group.index, num_rows_to_set_one, replace=False)
+    # group.loc[rows_to_set_one, 'column_name'] = 1
