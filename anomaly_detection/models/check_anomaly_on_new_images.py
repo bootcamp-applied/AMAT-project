@@ -37,7 +37,7 @@ urls = [
     "https://images.pexels.com/photos/1145274/pexels-photo-1145274.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
 ]
 
-test_images = download_and_resize_images(urls, resize_shape=(3, 32, 32))
+test_images = download_and_resize_images(urls, resize_shape=(32, 32))
 # or test_images = df.iloc[:9,2:]
 test_images = np.array(test_images)
 # test_images = test_images.reshape(test_images.shape[0],3,32,32)
