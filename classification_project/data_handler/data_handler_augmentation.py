@@ -109,7 +109,11 @@ class Augmentation:
         # ])
         transform = A.Compose([
             A.HorizontalFlip(p=0.5),
+<<<<<<< HEAD
             A.Rotate(limit=15, p=0.1),  # Apply rotation to 10% of the images
+=======
+            A.Rotate(limit=15, p=0.5),  # Apply rotation to 10% of the images
+>>>>>>> 39006ecb15341cebae536246026c2843e782710b
             A.RandomBrightnessContrast(p=0.2),
         ])
         augmented_images = [transform(image=image)['image'] for image in images]

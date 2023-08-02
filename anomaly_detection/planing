@@ -21,3 +21,23 @@ planning:
 
 # rows_to_set_one = np.random.choice(group.index, num_rows_to_set_one, replace=False)
     # group.loc[rows_to_set_one, 'column_name'] = 1
+
+
+
+
+
+
+# from sklearn.model_selection import train_test_split
+#
+# airplain_df = df[df['label']==0]
+#
+# airplain_images = airplain_df.iloc[:,2:]
+# train_images, val_images = train_test_split(airplain_images, test_size=0.2, random_state=42)
+# num_of_val = val_images.shape[0]
+# df_without_airplane = df[df['label']!=0].sample(n=num_of_val, random_state=42)
+# images_without_airplane = df_without_airplane.iloc[:,2:]
+# val_images['is_airplane'] = 1
+# images_without_airplane['is_airplane'] = 0
+# new_df = pd.concat([val_images, images_without_airplane], ignore_index=True)
+#
+# df_from_feather = pd.read_feather('../data/df.feather')

@@ -6,7 +6,7 @@ import joblib
 from tensorflow.keras.optimizers import Adam
 
 # version 1 net, like Asaf sent
-class CNN1:
+class CNN:
     def __init__(self, num_classes=15):
         self.batch_size = 32
         self.num_classes = num_classes
