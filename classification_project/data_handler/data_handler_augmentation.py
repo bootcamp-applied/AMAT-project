@@ -8,7 +8,7 @@ class Augmentation:
     def load_data(file_path, label_column, labels_to_read):
         # Read the CSV file into a DataFrame
         df = pd.read_csv(file_path)
-
+        print(df.shape)
         # Filter the rows based on the values in the label column
         filtered_df = df[df[label_column].isin(labels_to_read)]
         return filtered_df
@@ -50,9 +50,9 @@ class Augmentation:
 
     @staticmethod
     def main():
-        file_path = '../../data/processed/cifar-100.csv'
+        file_path = '../../data/processed/cifar-10-100-augmentation.csv'
         label_column = 'label'
-        labels_to_read = [1, 2, 17, 14, 4]
+        labels_to_read = [0,1, 2, 3,4,5,6,7,8,9,10,11,12,13,14]
 
         # Load the data
         filtered_df = Augmentation.load_data(file_path, label_column, labels_to_read)
@@ -78,11 +78,11 @@ class Augmentation:
         df = Augmentation.create_new_df(new_images, filtered_df)
 
         # Write the augmentation df to csv
-        path = '../../data/processed/augmentation.csv'
+        path = '../../data/processed/all_augmentation.csv'
         if os.path.exists(path):
             # If the file exists, delete it
             os.remove(path)
-
+        print(df.shape)
         df.to_csv(path, index=False, encoding='utf-8', mode='w')
 
 if __name__ == "__main__":
