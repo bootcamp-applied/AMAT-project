@@ -8,16 +8,17 @@ from keras.models import Model
 from classification_project.preprocessing.preprocessing import Preprocessing
 from classification_project.models.CNN1 import CNN
 
-df = pd.read_csv('../../data/processed/cifar-10-100.csv', dtype='int')
+df = pd.read_csv('../data/processed/cifar-10-100.csv', dtype='int')
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
 
-loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras')
-loaded_history_model = CNN.load_cnn_history('../saved_model/saved_cnn_history.pkl')
+loaded_model = CNN.load_cnn_model('../classification_project/saved_model/saved_cnn_model.keras')
+loaded_history_model = CNN.load_cnn_history('../classification_project/saved_model/saved_cnn_history.pkl')
 
 feat_extractor = Model(inputs=loaded_model.model.input,
                        outputs=loaded_model.model.get_layer('dense').output)
+
 features = feat_extractor.predict(x_test)
 
 tsne = TSNE().fit_transform(features)

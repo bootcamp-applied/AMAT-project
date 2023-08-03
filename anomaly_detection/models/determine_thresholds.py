@@ -1,13 +1,17 @@
-# note that the positive class represents the class of the anomalies
+# 1 (positive class): Represents the anomalous/outlier data points.
+# 0 (negative class): Represents the normal/inlines data points.
 
 import joblib
 import pickle
+
+import pandas as pd
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve, auc
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 
-CLASS = 0
+CLASS = 12
 
 features_extractor = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
 
@@ -45,4 +49,49 @@ plt.legend()
 plt.title('Histogram of Anomaly Scores')
 plt.show()
 
+print('dsfas')
+print('dsfas')
 
+
+# Step 5: Calculate and plot ROC curve
+X_flatten_features = np.concatenate((x_positive_flatten_features, x_negative_flatten_features), axis=0)
+y_positive = np.ones(len(x_positive), dtype=int)
+y_negative = np.zeros(len(x_negative), dtype=int)
+y_true = np.concatenate((y_positive, y_negative))
+
+# fpr, tpr, thresholds = roc_curve(y_true, -1 * models[CLASS].decision_function(X_flatten_features))
+# roc_auc = auc(fpr, tpr)
+#
+# plt.figure()
+# plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+# plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+# plt.xlim([0.0, 1.0])
+# plt.ylim([0.0, 1.05])
+# plt.xlabel('False Positive Rate')
+# plt.ylabel('True Positive Rate')
+# plt.title('Receiver Operating Characteristic (ROC) Curve')
+# plt.legend(loc="lower right")
+# plt.show()
+
+
+
+fpr, tpr, thresholds = roc_curve(y_true, -1 * models[CLASS].decision_function(X_flatten_features))
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.legend(loc="lower right")
+plt.show()
+
+# Find threshold for a specific point on the ROC curve
+desired_fpr = 0.2  # Choose the desired False Positive Rate
+index = np.argmax(fpr >= desired_fpr)  # Find the index closest to the desired FPR
+threshold_at_desired_fpr = thresholds[index]
+
+print("Threshold at desired FPR ({}): {:.4f}".format(desired_fpr, threshold_at_desired_fpr))
