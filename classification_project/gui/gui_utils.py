@@ -4,11 +4,14 @@ import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import pandas as pd
-from classification_project.models.CNN1 import CNN1
+from classification_project.models.CNN1 import CNN
 from classification_project.utils.handling_new_image import NewImage
 import base64
 from PIL import Image
 import io
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
+from tensorflow.image import resize
+
 
 new_image = None
 label = None
@@ -33,7 +36,7 @@ def format_image(image):
 def predict_label(image):
     global label
     # load the model
-    loaded_model = CNN1.load_cnn_model('../saved_model/saved_cnn_model.keras').model
+    loaded_model = CNN.load_cnn_model('../saved_model/saved_cnn_model.keras').model
     probabilities = loaded_model.predict(image)
     label = np.argmax(probabilities)
     label_category = convert_to_category()
@@ -66,6 +69,46 @@ def similar_images():
     # plt.imshow(closest)
     # plt.show()
     return reshaped_transposed_list
+
+
+def similar_images_2():
+    global new_image
+    # Load the DataFrame with flattened images (shape: (60000, 3074))
+    data_features = pd.read_feather('../../data/processed/features.feather')  # Replace 'your_data.csv' with the actual filename
+    data = pd.read_feather('../../data/processed/cifar_10_100_augmentation.feather')
+    data = data.iloc[:, 2:]
+    # Convert the DataFrame to a NumPy array (shape: (60000, 3074))
+
+    new_image = resize(new_image, [96, 96])
+
+    new_image = np.array(new_image)
+    # Preprocess the images
+    reshaped_image_array = new_image.reshape(1, 96, 96, 3)
+    new_image_preprocessed = preprocess_input(reshaped_image_array)
+    # Create the MobileNetV2 model
+    model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
+
+    new_image_features = model.predict(new_image_preprocessed)
+    new_image_features = new_image_features.flatten()
+    distances = []
+    for row in data_features.values:
+        distances.append(np.sum(np.abs(row - new_image_features)))
+
+    sorted_indices = np.argsort(distances)
+    four_closest_indices = sorted_indices[:4]
+    # te read data nit features
+    four_closest_vectors = data.iloc[four_closest_indices]
+    for i, image in enumerate(four_closest_vectors.values):
+        plt.subplot(1, 4, i+1)
+        image = image.reshape(3, 32, 32).transpose(1, 2, 0)  # Reshape the flattened image to the original shape (32x32x3)
+        plt.imshow(image)
+        plt.axis('off')
+
+    plt.show()
+    # reshaped_transposed_list = [row.reshape(3, 32, 32).transpose(1, 2, 0) for row in four_closest_vectors]
+    # # four_closest_vectors = four_closest_vectors.values.reshape(3, 32, 32).transpose(1, 2, 0)
+    # print(features.shape)
+    # return reshaped_transposed_list
 
 
 def encode_image(image_vector):

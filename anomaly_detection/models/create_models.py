@@ -6,7 +6,7 @@ import tensorflow as tf
 
 features_extractor = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
 
-path = '../../data/processed/cifar-10-100.csv'
+path = '../../data/processed/cifar_10_100.csv'
 df = pd.read_csv(path, dtype='int')
 grouped = df.groupby('label')
 models = {}

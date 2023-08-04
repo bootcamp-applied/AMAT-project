@@ -30,7 +30,7 @@ class DataHandlerCifar100:
         test_df = convert_dict_to_df(test_data, 0)
         df = pd.concat([train_df, test_df], ignore_index=True)
 
-        path = '../../data/processed/cifar-100.csv'
+        path = '../../data/processed/cifar_100.csv'
 
         if os.path.exists(path):
             # If the file exists, delete it

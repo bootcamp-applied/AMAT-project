@@ -51,7 +51,7 @@ def classify_label(contents):
         formated_image = gui_utils.format_image(contents)
         label = gui_utils.predict_label(formated_image)
         label_mes = f'Your image label is: {label}'
-        closest_images = gui_utils.similar_images()
+        closest_images = gui_utils.similar_images_2()
         similar_images_container = [
             html.Div([
                 html.Img(src=f"data:image/png;base64,{gui_utils.encode_image(img_vector)}",

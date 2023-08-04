@@ -38,7 +38,6 @@ def get_image_label(image_array):
     label_category = convert_to_category(label)
     return label_category
 
-    return "cat"
 
 app = dash.Dash(__name__)
 
