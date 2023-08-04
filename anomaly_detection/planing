@@ -1,0 +1,43 @@
+
+planning:
+- df division:
+    $ read df from data.feather
+    $ add column : 'is_val'
+    for each class put 1 in 20% rows
+    $ create feather file that contains the divison
+- train the models:
+    train as I did, but only if is_val == 0
+-determine the thresholds:
+    for each calss-
+        ^ create df that contains:
+            *1 the val of this class. 'is_from_class' = 1
+            *2 x form the other class(from data). x is the num of *1. 'is_form_class' = 0
+            = half is from this class and half is not
+        ^ take the df and make predictions
+        ^ do true,pred,positive,negative matrix
+        ^ do histogram of the amount of each score (floor to 3 digit after point)
+          the positive in one color and the negative in different.
+
+
+# rows_to_set_one = np.random.choice(group.index, num_rows_to_set_one, replace=False)
+    # group.loc[rows_to_set_one, 'column_name'] = 1
+
+
+
+
+
+
+# from sklearn.model_selection import train_test_split
+#
+# airplain_df = df[df['label']==0]
+#
+# airplain_images = airplain_df.iloc[:,2:]
+# train_images, val_images = train_test_split(airplain_images, test_size=0.2, random_state=42)
+# num_of_val = val_images.shape[0]
+# df_without_airplane = df[df['label']!=0].sample(n=num_of_val, random_state=42)
+# images_without_airplane = df_without_airplane.iloc[:,2:]
+# val_images['is_airplane'] = 1
+# images_without_airplane['is_airplane'] = 0
+# new_df = pd.concat([val_images, images_without_airplane], ignore_index=True)
+#
+# df_from_feather = pd.read_feather('../data/df.feather')
