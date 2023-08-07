@@ -73,11 +73,11 @@ def similar_images():
 
 def similar_images_2():
     global new_image
-    # Load the DataFrame with flattened images (shape: (60000, 3074))
-    data_features = pd.read_feather('../../data/processed/features.feather')  # Replace 'your_data.csv' with the actual filename
-    data = pd.read_feather('../../data/processed/cifar_10_100_augmentation.feather')
+    # Load the DataFrame with flattened images
+    data_features = pd.read_feather('../../data/processed/features_base_data.feather')
+    data = pd.read_feather('../../data/processed/cifar_10_100.feather')
     data = data.iloc[:, 2:]
-    # Convert the DataFrame to a NumPy array (shape: (60000, 3074))
+    # Convert the DataFrame to a NumPy array
 
     new_image = resize(new_image, [96, 96])
 
@@ -98,13 +98,15 @@ def similar_images_2():
     four_closest_indices = sorted_indices[:4]
     # te read data nit features
     four_closest_vectors = data.iloc[four_closest_indices]
-    for i, image in enumerate(four_closest_vectors.values):
-        plt.subplot(1, 4, i+1)
-        image = image.reshape(3, 32, 32).transpose(1, 2, 0)  # Reshape the flattened image to the original shape (32x32x3)
-        plt.imshow(image)
-        plt.axis('off')
+    return four_closest_vectors
+    # for i, image in enumerate(four_closest_vectors.values):
+    #     plt.subplot(1, 4, i+1)
+    #     image = image.reshape(3, 32, 32).transpose(1, 2, 0)  # Reshape the flattened image to the original shape (32x32x3)
+    #     plt.imshow(image)
+    #     plt.axis('off')
+    #
+    # plt.show()
 
-    plt.show()
     # reshaped_transposed_list = [row.reshape(3, 32, 32).transpose(1, 2, 0) for row in four_closest_vectors]
     # # four_closest_vectors = four_closest_vectors.values.reshape(3, 32, 32).transpose(1, 2, 0)
     # print(features.shape)
@@ -113,7 +115,7 @@ def similar_images_2():
 
 def encode_image(image_vector):
     # Reshape the image_vector to (32, 32, 3) if it's in the correct shape
-    image_array = image_vector.reshape(32, 32, 3)
+    image_array = image_vector.reshape(3, 32, 32).transpose(1, 2, 0)
     # Convert the image_array (a NumPy array) to a PIL image
     img = Image.fromarray(image_array.astype('uint8'))
     # Convert the PIL image to a base64-encoded string
