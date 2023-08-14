@@ -60,7 +60,7 @@ def update_similar_images(label_mes):
     heading_style = {'display': 'none'}
 
     if label_mes:
-        closest_images = gui_utils.similar_images_2()
+        closest_images = gui_utils.similar_images_CNN_features()
         similar_images_container = [
             html.Div([
                 html.Img(src=f"data:image/png;base64,{gui_utils.encode_image(img_vector)}",
