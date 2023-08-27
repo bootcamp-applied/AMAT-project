@@ -4,8 +4,6 @@ import requests
 from io import BytesIO
 from keras.models import Model
 import pickle
-from openTSNE import affinity
-from openTSNE import initialization
 import openTSNE
 import matplotlib.pyplot as plt
 
@@ -58,7 +56,7 @@ features_with_new = np.concatenate([features, new_image_features], axis=0)
 
 # Apply the pre-trained t-SNE model to the combined features
 test_representations_2d = tsne.fit_transform(features_with_new)
-#embedding_test = tsne.prepare_partial(x_test)
+
 #test_representations_2d = tsne.fit_transform(new_image_features,initialization=initial_embedding)
 
 labels = np.argmax(y_test, axis=1)
@@ -96,4 +94,5 @@ plt.gca().add_artist(legend1)
 
 # Show the plot
 plt.show()
+
 

@@ -43,7 +43,7 @@ class NewImage:
         # change from GBR to RGB
         new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
         Visualization.show_downsampled_image(origin_img, new_image)
-        write_to_path = '../../data/processed/cifar-10-100.csv'
+        write_to_path = '../../data/processed/cifar_10_100.csv'
         with open(write_to_path, 'a', newline='') as file:
             writer = csv.writer(file)
             # write the image to csv
@@ -54,6 +54,6 @@ class NewImage:
             writer.writerows(df.values)
 
     def test_new_images(self):
-        df = pd.read_csv('../../data/processed/cifar-10-100.csv')
+        df = pd.read_csv('../../data/processed/cifar_10_100.csv')
         last_imgs = df.iloc[-9, :][2:].values.reshape(3, 32, 32).transpose(1, 2, 0)
         plot_images(last_imgs)
