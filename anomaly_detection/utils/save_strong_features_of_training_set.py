@@ -4,7 +4,7 @@ import pandas as pd
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from tensorflow.image import resize
 
-data = pd.read_feather('../../data/processed/cifar_10_100_augmentation.feather')
+data = pd.read_csv('../../data/processed/cifar_10_100.csv')
 data = data.iloc[:, 2:]
 
 # Convert the DataFrame to a NumPy array (shape: (60000, 3072))
@@ -37,7 +37,7 @@ features_flat = features.reshape(num_samples, num_features)
 features_df = pd.DataFrame(features_flat)
 features_df.columns = features_df.columns.astype(str)
 
-path = '../../data/processed/features.feather'
+path = '../../data/processed/features_base_data.feather'
 
 if os.path.exists(path):
     # If the file exists, delete it

@@ -2,6 +2,7 @@ import base64
 import json
 import matplotlib.pyplot as plt
 import cv2
+from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
 from classification_project.models.CNN1 import CNN
@@ -11,7 +12,7 @@ from PIL import Image
 import io
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from tensorflow.image import resize
-
+from keras import backend as K
 
 new_image = None
 label = None
@@ -51,7 +52,7 @@ def convert_to_category():
     return label_category
 
 
-def similar_images():
+def similar_images_from_base_csv():
     df = pd.read_csv('../../data/processed/cifar-100.csv')
     df_class = df[df['label'] == label]
     features_class = df_class.iloc[:, 2:]
@@ -71,13 +72,13 @@ def similar_images():
     return reshaped_transposed_list
 
 
-def similar_images_2():
+def similar_images_mobileV2_features():
     global new_image
-    # Load the DataFrame with flattened images (shape: (60000, 3074))
-    data_features = pd.read_feather('../../data/processed/features.feather')  # Replace 'your_data.csv' with the actual filename
-    data = pd.read_feather('../../data/processed/cifar_10_100_augmentation.feather')
+    # Load the DataFrame with flattened images
+    data_features = pd.read_feather('../../data/processed/features_base_data.feather')
+    data = pd.read_feather('../../data/processed/cifar_10_100.feather')
     data = data.iloc[:, 2:]
-    # Convert the DataFrame to a NumPy array (shape: (60000, 3074))
+    # Convert the DataFrame to a NumPy array
 
     new_image = resize(new_image, [96, 96])
 
@@ -98,22 +99,50 @@ def similar_images_2():
     four_closest_indices = sorted_indices[:4]
     # te read data nit features
     four_closest_vectors = data.iloc[four_closest_indices]
-    for i, image in enumerate(four_closest_vectors.values):
-        plt.subplot(1, 4, i+1)
-        image = image.reshape(3, 32, 32).transpose(1, 2, 0)  # Reshape the flattened image to the original shape (32x32x3)
-        plt.imshow(image)
-        plt.axis('off')
+    return four_closest_vectors
+    # for i, image in enumerate(four_closest_vectors.values):
+    #     plt.subplot(1, 4, i+1)
+    #     image = image.reshape(3, 32, 32).transpose(1, 2, 0)  # Reshape the flattened image to the original shape (32x32x3)
+    #     plt.imshow(image)
+    #     plt.axis('off')
+    #
+    # plt.show()
 
-    plt.show()
     # reshaped_transposed_list = [row.reshape(3, 32, 32).transpose(1, 2, 0) for row in four_closest_vectors]
     # # four_closest_vectors = four_closest_vectors.values.reshape(3, 32, 32).transpose(1, 2, 0)
     # print(features.shape)
     # return reshaped_transposed_list
 
+def similar_images_CNN_features():
+    global new_image
+    # Load the DataFrame with flattened images
+    data_features = pd.read_feather('../../data/processed/features_after_CNN.feather')
+    data = pd.read_feather('../../data/processed/cifar_10_100.feather')
+    data = data.iloc[:, 2:]
+    # Preprocess the images
+    reshaped_image_array = new_image.reshape(1, 32, 32, 3)
+    model = CNN.load_cnn_model('../../classification_project/saved_model/saved_cnn_model.h5').model
+    preprocessed_image = preprocess_input(reshaped_image_array)
+    feature_layer_index = -2  # Index of the layer before the final dense layer
+    feature_layer_output = model.layers[feature_layer_index].output
+    # Create a Keras function to extract features from the given input images
+    get_features = K.function([model.input], [feature_layer_output])
+    new_image_features = get_features([preprocessed_image])[0]
+    # distances = []
+    # for row in data_features.values:
+    #     distances.append(np.sum(np.abs(row - new_image_features)))
+    #
+    # sorted_indices = np.argsort(distances)
+    similarity_scores = cosine_similarity(new_image_features, data_features)
+    closest_indices = np.argsort(similarity_scores[0])[::-1][:4]
+    four_closest_indices = sorted_indices[:4]
+    # te read data features
+    four_closest_vectors = data.iloc[four_closest_indices]
+    return four_closest_vectors
 
 def encode_image(image_vector):
     # Reshape the image_vector to (32, 32, 3) if it's in the correct shape
-    image_array = image_vector.reshape(32, 32, 3)
+    image_array = image_vector.reshape(3, 32, 32).transpose(1, 2, 0)
     # Convert the image_array (a NumPy array) to a PIL image
     img = Image.fromarray(image_array.astype('uint8'))
     # Convert the PIL image to a base64-encoded string
