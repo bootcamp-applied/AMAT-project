@@ -1,17 +1,10 @@
 import dash
-from dash import dcc, html, Input, Output
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash import Dash, dcc, html, Input, Output
+from classification_project.utils.handling_new_image import NewImage
 from PIL import Image
 import base64
 from io import BytesIO
-# Replace the base64 data with your desired image's base64 data
-imgdata = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAlgAAAALCAQAAACa2aK1AAAACXBIWXMAAA7EAAAOxAGVKw4bAA..."
-                           "XII2lUAAAIg0lEQVRIDbWWXWgU9RjG/ubJlKUZmNnZqfuq7LL3atqrGQVHnqu6qCBRo4KjTmMSogElJd0e9TT....")
-image = Image.open(BytesIO(imgdata))
-im = image.resize((400, 400))
-# Dash app initialization
+
 app = dash.Dash(__name__)
 app.layout = html.Div([
     dcc.Graph(
