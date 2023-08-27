@@ -26,10 +26,10 @@ def preprocess_new_image(image_url, image_size):
     return new_image_array
 
 # Load the pre-trained t-SNE model
-tsne_model_path = 'tsne_model.pkl'
+tsne_model_path = 'tsne_model2.pkl'
 with open(tsne_model_path, 'rb') as f:
     # tsne = pickle.load(f)
-    tsne, initial_embedding = pickle.load(f)
+    embedding_train = pickle.load(f)
 
 # Load the pre-trained CNN model
 loaded_model = CNN.load_cnn_model('../saved_model/cnn_model_all_data.keras')
@@ -47,7 +47,7 @@ new_image_array = preprocess_new_image(new_image_url, new_image_size)
 new_image_features = feat_extractor.predict(np.expand_dims(new_image_array, axis=0))
 
 # Load the pre-computed features and labels for the test set
-test_data_path = 'test_data.pkl'
+test_data_path = 'test_data2.pkl'
 with open(test_data_path, 'rb') as f:
     test_data = pickle.load(f)
 
@@ -57,8 +57,8 @@ features, y_test = test_data  # Extract features and labels from the loaded tupl
 features_with_new = np.concatenate([features, new_image_features], axis=0)
 
 # Apply the pre-trained t-SNE model to the combined features
-test_representations_2d = tsne.fit_transform(features_with_new)
-#embedding_test = tsne.prepare_partial(x_test)
+#test_representations_2d = tsne.fit_transform(features_with_new)
+test_representations_2d = embedding_train.prepare_partial(new_image_features)
 #test_representations_2d = tsne.fit_transform(new_image_features,initialization=initial_embedding)
 
 labels = np.argmax(y_test, axis=1)
