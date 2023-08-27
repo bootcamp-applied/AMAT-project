@@ -20,7 +20,7 @@ class DataHandlerCifar10:
     def load_data_to_csv(self):
         train_files = '../../data/raw/cifar-10-batches-py/data_batch_'
         test_file = '../../data/raw/cifar-10-batches-py/test_batch'
-        write_to_path = '../../data/processed/cifar-10.csv'
+        write_to_path = '../../data/processed/cifar_10.csv'
         if os.path.exists(write_to_path):
             os.remove(write_to_path)
         with open(write_to_path, 'a', newline='') as file:

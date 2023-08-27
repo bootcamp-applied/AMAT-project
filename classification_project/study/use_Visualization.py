@@ -55,7 +55,7 @@ def plot_images_to_given_label(label):
     with open(map_label, 'r') as f:
         label_dict = json.load(f)
     label_key = next((key for key, val in label_dict.items() if val == label), None)
-    csv_file_path = '../../data/processed/cifar-10-100.csv'
+    csv_file_path = '../../data/processed/cifar_10_100.csv'
     # selected_r = data[data['label'] == str(label_key)]
     rows_to_read = 9
     selected_rows = []

@@ -105,3 +105,4 @@ zipp~=3.8.0
 dash~=2.11.0
 plotly~=5.9.0
 keras~=2.10.0
+albumentations

@@ -3,7 +3,9 @@ data/
 .idea/
 venv/
 new/
-
+presentation.pptx
+saved_models/
+saved_model/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

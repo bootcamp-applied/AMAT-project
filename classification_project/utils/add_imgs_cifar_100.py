@@ -24,7 +24,7 @@ def plot_images(images):
 
 
 def load_new_images(num_rows=10):
-    csv_file_path = '../../data/processed/cifar-100.csv'
+    csv_file_path = '../../data/processed/cifar_100.csv'
     total_rows = sum(1 for line in open(csv_file_path)) - 1  # Subtract 1 for the header
     no_labels = [10, 11, 12, 13, 14]
     skip_rows = sorted(random.sample(range(1, total_rows + 1), total_rows - num_rows))

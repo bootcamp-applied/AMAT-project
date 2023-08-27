@@ -30,6 +30,7 @@ class Preprocessing:
     def normalize_data(self):
         self.data.iloc[:, 2:] = self.data.iloc[:, 2:].astype('float32') / 255
 
+
     def clean_data(self):
         self.data = self.data[~(self.data > 255).any(axis=1)]
 
