@@ -1,7 +1,7 @@
 import pandas as pd
 import cv2
 
-df = pd.read_csv('../data/processed/cifar-10-100.csv',nrows=3)
+df = pd.read_csv('../data/processed/cifar_10_100.csv', nrows=3)
 
 first_img = df.iloc[1,:][2:].values.reshape(3,32,32).transpose(1,2,0)
 
