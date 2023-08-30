@@ -6,7 +6,7 @@ import joblib
 from tensorflow.keras.optimizers import Adam
 
 # version 1 net, like Asaf sent
-class CNN:
+class CNN1:
     def __init__(self, num_classes=15):
         self.batch_size = 32
         self.num_classes = num_classes
@@ -34,7 +34,7 @@ class CNN:
         self.model.add(Activation('relu'))  # 512*1*1
         self.model.add(Dropout(0.5))  # 512*1*1
         self.model.add(Dense(self.num_classes))  # 10*1*1
-        self.model.add(Activation('softmax')) # 10*1*1
+        self.model.add(Activation('softmax'))  # 10*1*1
 
     def train(self, x_train, y_train, x_val, y_val):
         self.model.compile(loss='categorical_crossentropy',

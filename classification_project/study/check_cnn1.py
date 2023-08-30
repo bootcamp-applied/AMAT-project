@@ -29,4 +29,8 @@ print('Saved trained model at %s ' % model_path)
 # Score trained model.
 scores = cnn_model.model.evaluate(x_test, y_test, verbose=1)
 print('Test loss:', scores[0])
+
 print('Test accuracy:', scores[1])
+
+print('Test accuracy:', scores[1])
+
