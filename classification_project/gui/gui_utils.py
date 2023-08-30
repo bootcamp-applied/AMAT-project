@@ -115,7 +115,8 @@ def similar_images_mobileV2_features():
     # print(features.shape)
     # return reshaped_transposed_list
 
-def similar_images_CNN_features():
+
+def similar_images_cnn_features():
     global new_image
     # Load the DataFrame with flattened images
     data_features = pd.read_feather('../../data/processed/features_after_CNN.feather')
@@ -133,7 +134,6 @@ def similar_images_CNN_features():
     distances = []
     for row in data_features.values:
         distances.append(np.sum(np.abs(row - new_image_features)))
-
     sorted_indices = np.argsort(distances)
     # similarity_scores = cosine_similarity(new_image_features, data_features)
     # closest_indices = np.argsort(similarity_scores[0])[::-1][:4]
@@ -141,7 +141,9 @@ def similar_images_CNN_features():
     # te read data features
     four_closest_vectors = data.iloc[four_closest_indices]
     return four_closest_vectors
-def similar_images_CNN_features_cosine():
+
+
+def similar_images_cnn_features_cosine():
     global new_image
     # Load the DataFrame with flattened images
     data_features = pd.read_feather('../../data/processed/features_after_CNN.feather')
@@ -165,11 +167,8 @@ def similar_images_CNN_features_cosine():
 
 def similar_images_using_potential():
     global new_image
-    # Load the DataFrame with flattened images
     data_features = pd.read_feather('../../data/processed/features_after_CNN.feather')
     data = pd.read_feather('../../data/processed/cifar_10_100.feather')
-    data = data.iloc[:, 2:]
-    # Preprocess the images
     reshaped_image_array = new_image.reshape(1, 32, 32, 3)
     model = CNN.load_cnn_model('../save_models/cnn_model_1.h5').model
     preprocessed_image = preprocess_input(reshaped_image_array)
@@ -182,11 +181,11 @@ def similar_images_using_potential():
     for row in data_features.values:
         distances.append(np.sum(np.abs(row - new_image_features)))
     sorted_indices = np.argsort(distances)
-    # four_closest_indices = sorted_indices[:4]
-    # te read data features
-    sorted_data = data[sorted_indices]
-    sorted_data = sorted_data['label' in probabilities[:4]]
-    four_closest_vectors = sorted_data[:4]
+    sorted_data = data.iloc[sorted_indices]
+    probabilities_indices = np.argsort(probabilities.reshape(-1))
+    labels = probabilities_indices[-4:]  # Assuming this contains the labels you want
+    filtered_data = sorted_data[sorted_data['label'].isin(labels)]
+    four_closest_vectors = filtered_data.iloc[:4, 2:]
     return four_closest_vectors
 
 

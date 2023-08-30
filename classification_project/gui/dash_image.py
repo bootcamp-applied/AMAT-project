@@ -60,13 +60,23 @@ def update_similar_images(label_mes):
     heading_style = {'display': 'none'}
 
     if label_mes:
-        closest_images = gui_utils.similar_images_2()
-        similar_images_container = [
-            html.Div([
+        closest_images = gui_utils.similar_images_using_potential()
+        similar_images_container = []
+
+        ranking_phrases = ["Most Similar", "Second Most Similar", "Third Most Similar", "Fourth Most Similar"]
+
+        for i, img_vector in enumerate(closest_images.values, start=0):
+            if i >= len(ranking_phrases):
+                break
+
+            similarity_phrase = html.Div(ranking_phrases[i], style={'text-align': 'center', 'font-weight': 'bold'})
+            image_div = html.Div([
+                similarity_phrase,
                 html.Img(src=f"data:image/png;base64,{gui_utils.encode_image(img_vector)}",
                          style={'width': '300px', 'height': '300px'})
-            ]) for img_vector in closest_images.values
-        ]
+            ], style={'display': 'flex', 'flex-direction': 'column', 'align-items': 'center'})
+            similar_images_container.append(image_div)
+
         heading_style = {'text-align': 'right', 'margin-bottom': '20px'}
 
     return heading_style, similar_images_container

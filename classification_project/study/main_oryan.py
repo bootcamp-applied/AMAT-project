@@ -1,5 +1,7 @@
 import pandas as pd
 import visualkeras
+from matplotlib import pyplot as plt
+
 from classification_project.models.CNN1 import CNN
 from classification_project.study.use_Visualization import plot_images_to_given_label
 import pydot
@@ -21,7 +23,8 @@ if __name__ == '__main__':
     # visualkeras.layered_view(loaded_model.model)
     # data = pd.read_csv('../../data/processed/cifar_10_100.csv')
     # data.to_feather('../../data/processed/cifar_10_100.feather')
-    from tensorflow.keras.models import load_model as tf_load_model
-    import visualkeras
-    loaded_model = tf_load_model('/content/drive/MyDrive/cnn_model_1.h5')
-    visualkeras.layered_view(loaded_model, to_file='model.png', legend=True)
+    from classification_project.models.CNN1 import CNN
+
+    model = CNN.load_cnn_model('../save_models/cnn_model_1.h5').model
+    visualkeras.layered_view(model)
+    plt.show()
