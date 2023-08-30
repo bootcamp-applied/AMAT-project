@@ -1,97 +1,81 @@
-# 1 (positive class): Represents the anomalous/outlier data points.
-# 0 (negative class): Represents the normal/inlines data points.
-
 import joblib
-import pickle
-
-import pandas as pd
-import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
-from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
+import pickle
 
-CLASS = 12
-
-features_extractor = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
-
-with open('../data/validation_set.pickle', 'rb') as file:
+with open('../data/validation_set_6.pickle', 'rb') as file:
     validation_set = pickle.load(file)
 
-class_df = validation_set[CLASS]
-x_positive = class_df[class_df['belongs_to_class'] == 0].drop('belongs_to_class', axis=1)
-x_negative = class_df[class_df['belongs_to_class'] == 1].drop('belongs_to_class', axis=1)
+models = joblib.load("../saved_models/isolation_forest_models_6.joblib")
 
-x_positive = np.array(x_positive)
-x_positive = x_positive.reshape(len(x_positive), 3, 32, 32)
-x_positive = x_positive.transpose(0, 2, 3, 1)
-x_positive = tf.image.resize(x_positive, (96, 96))
-x_positive_features = features_extractor.predict(preprocess_input(x_positive))
-x_positive_flatten_features = x_positive_features.reshape(x_positive_features.shape[0], -1)
+class_names = [
+    "airplane", "automobile", "bird", "cat", "deer",
+    "dog", "frog", "horse", "ship", "truck",
+    "fish", "people", "flowers", "trees", "fruit and vegetables"
+]
 
-x_negative = np.array(x_negative)
-x_negative = x_negative.reshape(len(x_negative), 3, 32, 32)
-x_negative = x_negative.transpose(0, 2, 3, 1)
-x_negative = tf.image.resize(x_negative, (96, 96))
-x_negative_features = features_extractor.predict(preprocess_input(x_negative))
-x_negative_flatten_features = x_negative_features.reshape(x_negative_features.shape[0], -1)
+def plot_histogram(anomaly_scores_positive, anomaly_scores_negative, class_name):
+    plt.hist(anomaly_scores_positive, bins=50, label=f'Class {class_name} (Positive)', alpha=0.5)
+    plt.hist(anomaly_scores_negative, bins=50, label=f'Class {class_name} (Negative)', alpha=0.5)
+    plt.xlabel('Anomaly Score')
+    plt.ylabel('Frequency')
+    plt.legend()
+    plt.title(f'Anomaly Score Distribution for Class: {class_name}')
 
-models = joblib.load("../saved_models/isolation_forest_models_low_contamination.joblib")
+plt.figure(figsize=(15, 10))
+for class_idx in range(len(class_names)):
+    class_name = class_names[class_idx]
+    class_df = validation_set[class_idx]
+    x_positive = class_df[class_df['belongs_to_class'] == 1].drop('belongs_to_class', axis=1)
+    x_negative = class_df[class_df['belongs_to_class'] == 0].drop('belongs_to_class', axis=1)
 
-anomaly_scores_positive = models[CLASS].decision_function(x_positive_flatten_features)
-anomaly_scores_negative = models[CLASS].decision_function(x_negative_flatten_features)
+    x_positive = np.array(x_positive)
+    x_negative = np.array(x_negative)
 
-plt.hist(anomaly_scores_positive, bins=50, label='Positive Class', alpha=0.5)
-plt.hist(anomaly_scores_negative, bins=50, label='Negative Class', alpha=0.5)
-plt.xlabel('Anomaly Score')
-plt.ylabel('Frequency')
-plt.legend()
-plt.title('Histogram of Anomaly Scores')
+    anomaly_scores_positive = models[class_idx].decision_function(x_positive)
+    anomaly_scores_negative = models[class_idx].decision_function(x_negative)
+    # anomaly_scores_positive = models[class_idx].score_samples(x_positive)
+    # anomaly_scores_negative = models[class_idx].score_samples(x_negative)
+
+    plt.subplot(5, 3, class_idx + 1)
+    plot_histogram(anomaly_scores_positive, anomaly_scores_negative, class_name)
+
+plt.tight_layout()
 plt.show()
 
-print('dsfas')
-print('dsfas')
+# Define a list of colors for each class
+colors = ['blue', 'red', 'green', 'purple', 'orange',
+          'cyan', 'magenta', 'yellow', 'brown', 'pink',
+          'gray', 'lime', 'teal', 'indigo', 'olive']
 
+plt.figure(figsize=(15, 10))
+for class_idx in range(len(class_names)):
+    class_name = class_names[class_idx]
+    class_df = validation_set[class_idx]
+    x_positive = class_df[class_df['belongs_to_class'] == 1].drop('belongs_to_class', axis=1)
+    x_negative = class_df[class_df['belongs_to_class'] == 0].drop('belongs_to_class', axis=1)
 
-# Step 5: Calculate and plot ROC curve
-X_flatten_features = np.concatenate((x_positive_flatten_features, x_negative_flatten_features), axis=0)
-y_positive = np.ones(len(x_positive), dtype=int)
-y_negative = np.zeros(len(x_negative), dtype=int)
-y_true = np.concatenate((y_positive, y_negative))
+    x_positive = np.array(x_positive)
+    x_negative = np.array(x_negative)
 
-# fpr, tpr, thresholds = roc_curve(y_true, -1 * models[CLASS].decision_function(X_flatten_features))
-# roc_auc = auc(fpr, tpr)
-#
-# plt.figure()
-# plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
-# plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-# plt.xlim([0.0, 1.0])
-# plt.ylim([0.0, 1.05])
-# plt.xlabel('False Positive Rate')
-# plt.ylabel('True Positive Rate')
-# plt.title('Receiver Operating Characteristic (ROC) Curve')
-# plt.legend(loc="lower right")
-# plt.show()
+    X_flatten_features = np.concatenate((x_positive, x_negative), axis=0)
+    y_positive = np.ones(len(x_positive), dtype=int)
+    y_negative = np.zeros(len(x_negative), dtype=int)
+    y_true = np.concatenate((y_positive, y_negative))
 
+    fpr, tpr, thresholds = roc_curve(y_true, models[class_idx].decision_function(X_flatten_features))
+    # fpr, tpr, thresholds = roc_curve(y_true, models[class_idx].score_samples(X_flatten_features))
+    roc_auc = auc(fpr, tpr)
 
+    # Use a different color for each class's ROC curve
+    plt.plot(fpr, tpr, color=colors[class_idx], lw=2, label=f'Class {class_name} (AUC = {roc_auc:.2f})')
 
-fpr, tpr, thresholds = roc_curve(y_true, -1 * models[CLASS].decision_function(X_flatten_features))
-roc_auc = auc(fpr, tpr)
-
-plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
 plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.title('ROC Curves for All Classes')
 plt.legend(loc="lower right")
 plt.show()
-
-# Find threshold for a specific point on the ROC curve
-desired_fpr = 0.2  # Choose the desired False Positive Rate
-index = np.argmax(fpr >= desired_fpr)  # Find the index closest to the desired FPR
-threshold_at_desired_fpr = thresholds[index]
-
-print("Threshold at desired FPR ({}): {:.4f}".format(desired_fpr, threshold_at_desired_fpr))

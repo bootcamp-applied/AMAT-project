@@ -8,7 +8,7 @@ import openTSNE
 import matplotlib.pyplot as plt
 
 
-from classification_project.models.CNN1 import CNN
+from classification_project.models.CNN1 import CNN1
 
 def preprocess_new_image(image_url, image_size):
     # Download the image from the URL with SSL certificate verification disabled
@@ -30,8 +30,8 @@ with open(tsne_model_path, 'rb') as f:
     tsne, initial_embedding = pickle.load(f)
 
 # Load the pre-trained CNN model
-loaded_model = CNN.load_cnn_model('../saved_model/cnn_model_all_data.keras')
-loaded_history_model = CNN.load_cnn_history('../saved_model/cnn_history_all_data.pkl')
+loaded_model = CNN1.load_cnn_model('../saved_model/cnn_model_all_data.keras')
+loaded_history_model = CNN1.load_cnn_history('../saved_model/cnn_history_all_data.pkl')
 
 # Create a feature extractor model
 feat_extractor = Model(inputs=loaded_model.model.input, outputs=loaded_model.model.get_layer('dense').output)

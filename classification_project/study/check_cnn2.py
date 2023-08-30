@@ -1,14 +1,14 @@
 import pandas as pd
 import os
 from classification_project.preprocessing.preprocessing import Preprocessing
-from classification_project.models.CNN1 import CNN1
+from classification_project.models.CNN2 import CNN2
 
 df = pd.read_feather('../../data/processed/cifar_10_100_augmentation.feather')
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
 
-cnn_model = CNN1()
+cnn_model = CNN2()
 history = cnn_model.train(x_train, y_train, x_val, y_val)
 
 accuracy = cnn_model.evaluate_accuracy(x_test, y_test)
