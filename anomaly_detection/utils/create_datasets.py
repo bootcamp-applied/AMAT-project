@@ -1,10 +1,34 @@
+import pickle
+from tensorflow.keras.models import load_model, Model
 import pandas as pd
 import numpy as np
-import pickle
 
-path = '../data/features_6.feather'
-features_df = pd.read_feather(path)
-print('j')
+
+# Load the CNN model
+cnn_model = load_model('../../classification_project/saved_models/cnn_model_all_data.keras')
+# cnn_model = load_model('../../classification_project/saved_models/best_model.h5')
+
+# Create a feature extractor model using a specific layer
+feat_extractor = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense_1').output)
+
+# Read the data from the feather file
+df = pd.read_feather('../data/df.feather')
+
+images = np.array(df.iloc[:, 2:]).reshape(-1, 3, 32, 32).transpose(0, 2, 3, 1)
+
+# Normalize the images
+normalized_images = images.astype('float32') / 255
+
+# Extract features using the feature extractor model
+features = feat_extractor.predict(normalized_images)
+
+# Reshape the features for saving to a DataFrame
+flatten_features = features.reshape(features.shape[0], -1)
+
+# Create a DataFrame with the flattened features and labels
+features_df = pd.DataFrame(flatten_features)
+features_df.insert(0, 'label', df['label'])
+
 # filter by TP
 
 training_set = {}
