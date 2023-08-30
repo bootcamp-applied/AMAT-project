@@ -88,3 +88,4 @@ class Augmentation:
 
 if __name__ == "__main__":
     Augmentation.main()
+    print("ok")
