@@ -26,14 +26,14 @@ def preprocess_new_image(image_url, image_size):
     return new_image_array
 
 # Load the pre-trained t-SNE model
-tsne_model_path = 'tsne_model2.pkl'
+tsne_model_path = 'tsne_model.pkl'
 with open(tsne_model_path, 'rb') as f:
     # tsne = pickle.load(f)
     embedding_train = pickle.load(f)
 
 # Load the pre-trained CNN model
-loaded_model = CNN.load_cnn_model('../saved_model/cnn_model_all_data.keras')
-loaded_history_model = CNN.load_cnn_history('../saved_model/cnn_history_all_data.pkl')
+loaded_model = CNN.load_cnn_model('../saved_models/cnn_model_all_data_augmentation.keras')
+loaded_history_model = CNN.load_cnn_history('../saved_models/cnn_history_all_data_augmentation.pkl')
 
 # Create a feature extractor model
 feat_extractor = Model(inputs=loaded_model.model.input, outputs=loaded_model.model.get_layer('dense').output)
@@ -47,7 +47,7 @@ new_image_array = preprocess_new_image(new_image_url, new_image_size)
 new_image_features = feat_extractor.predict(np.expand_dims(new_image_array, axis=0))
 
 # Load the pre-computed features and labels for the test set
-test_data_path = 'test_data2.pkl'
+test_data_path = 'test_data.pkl'
 with open(test_data_path, 'rb') as f:
     test_data = pickle.load(f)
 
