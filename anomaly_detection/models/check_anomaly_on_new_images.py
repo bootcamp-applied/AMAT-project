@@ -43,7 +43,7 @@ test_images = np.array(test_images)
 # test_images = test_images.reshape(test_images.shape[0],3,32,32)
 # test_images = test_images.transpose(0,2,3,1)
 test_images = tf.image.resize(test_images, (96, 96))
-# for examplt plt.imshow(np.array(test_images[7]).astype(int))
+# for example plt.imshow(np.array(test_images[7]).astype(int))
 features = features_extractor.predict(preprocess_input(test_images))
 flatten_features = features.reshape(features.shape[0], -1)
 

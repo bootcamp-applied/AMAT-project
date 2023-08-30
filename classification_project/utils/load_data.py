@@ -3,7 +3,7 @@ import numpy as np
 
 
 def load_data():
-    df = pd.read_csv('../../data/processed/cifar-10-100.csv')
+    df = pd.read_csv('../../data/processed/cifar_10_100.csv')
 
     train = df[df['is_train'] == 1]
     test = df[df['is_train'] == 0]

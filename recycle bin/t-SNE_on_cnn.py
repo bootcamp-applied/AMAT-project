@@ -8,7 +8,7 @@ from keras.models import Model
 from classification_project.preprocessing.preprocessing import Preprocessing
 from classification_project.models.CNN1 import CNN
 
-df = pd.read_csv('../data/processed/cifar-10-100.csv', dtype='int')
+df = pd.read_csv('../data/processed/cifar_10_100.csv', dtype='int')
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)

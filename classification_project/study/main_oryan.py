@@ -19,5 +19,9 @@ if __name__ == '__main__':
     # input_shape = loaded_model.layers[0].input_shape
     # print("Input Shape:", input_shape)
     # visualkeras.layered_view(loaded_model.model)
-    data = pd.read_csv('../../data/processed/cifar_10_100.csv')
-    data.to_feather('../../data/processed/cifar_10_100.feather')
+    # data = pd.read_csv('../../data/processed/cifar_10_100.csv')
+    # data.to_feather('../../data/processed/cifar_10_100.feather')
+    from tensorflow.keras.models import load_model as tf_load_model
+    import visualkeras
+    loaded_model = tf_load_model('/content/drive/MyDrive/cnn_model_1.h5')
+    visualkeras.layered_view(loaded_model, to_file='model.png', legend=True)

@@ -6,7 +6,7 @@ from dash_image import Dash, dcc, html, Input, Output
 from classification_project.study.use_Visualization import plot_images_to_given_label
 
 app = Dash(__name__)
-df = pd.read_csv(r'../../data/processed/cifar-10-100.csv')
+df = pd.read_csv(r'../../data/processed/cifar_10_100.csv')
 
 #df = df.groupby(['label', 'is_train'])[['Pct of Colonies Impacted']].mean()
 df.reset_index(inplace=True)
