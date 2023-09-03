@@ -78,7 +78,7 @@ class Visualization:
         ax[0].set_title('Original Image')
         ax[1].imshow(new_img)
         ax[1].set_title("New Image")
-        plt.show()
+        # plt.show()
 
     # Function to plot the ROC Curve
     @staticmethod

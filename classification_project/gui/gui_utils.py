@@ -5,7 +5,7 @@ import cv2
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
-from classification_project.models.CNN1 import CNN
+from classification_project.models.CNN1 import CNN1 as CNN
 from classification_project.utils.handling_new_image import NewImage
 import base64
 from PIL import Image
@@ -15,9 +15,9 @@ from tensorflow.image import resize
 from keras import backend as K
 
 new_image = None
-label = None
+# label = None
 probabilities = None
-
+similar_images_label = None
 
 def format_image(image):
     global new_image
@@ -27,7 +27,7 @@ def format_image(image):
     image = np.frombuffer(image, np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     handler = NewImage()
-    image, _ = handler.image_handle(image)
+    image = handler.image_handle(image)
     # flat the image
     new_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     nor_image = new_image.astype('float32') / 255
@@ -36,17 +36,17 @@ def format_image(image):
 
 
 def predict_label(image):
-    global label
+    # global label
     global probabilities
     # load the model
     loaded_model = CNN.load_cnn_model('../save_models/cnn_model_1.h5').model
     probabilities = loaded_model.predict(image)
     label = np.argmax(probabilities)
-    label_category = convert_to_category()
+    label_category = convert_to_category(label)
     return label_category
 
 
-def convert_to_category():
+def convert_to_category(label):
     map_label = '../utils/dict.json'
     with open(map_label, 'r') as f:
         label_dict = json.load(f)
@@ -54,24 +54,24 @@ def convert_to_category():
     return label_category
 
 
-def similar_images_from_base_csv():
-    df = pd.read_csv('../../data/processed/cifar-100.csv')
-    df_class = df[df['label'] == label]
-    features_class = df_class.iloc[:, 2:]
-    # features_array = features_class.to_numpy()
-    flattened_image = np.ravel(new_image)
-    distances = []
-    for row in features_class.values:
-        distances.append(np.sum(np.abs(row - flattened_image)))
-    sorted_indices = np.argsort(distances)
-    four_closest_indices = sorted_indices[:4]
-    four_closest_vectors = features_class.iloc[four_closest_indices]
-    reshaped_transposed_list = [row.reshape(3, 32, 32).transpose(1, 2, 0) for row in four_closest_vectors.values]
-    # four_closest_vectors = four_closest_vectors.values.reshape(3, 32, 32).transpose(1, 2, 0)
-    # closest = four_closest_vectors.values[0].reshape(3, 32, 32).transpose(1, 2, 0)
-    # plt.imshow(closest)
-    # plt.show()
-    return reshaped_transposed_list
+# def similar_images_from_base_csv():
+#     df = pd.read_csv('../../data/processed/cifar-100.csv')
+#     df_class = df[df['label'] == label]
+#     features_class = df_class.iloc[:, 2:]
+#     # features_array = features_class.to_numpy()
+#     flattened_image = np.ravel(new_image)
+#     distances = []
+#     for row in features_class.values:
+#         distances.append(np.sum(np.abs(row - flattened_image)))
+#     sorted_indices = np.argsort(distances)
+#     four_closest_indices = sorted_indices[:4]
+#     four_closest_vectors = features_class.iloc[four_closest_indices]
+#     reshaped_transposed_list = [row.reshape(3, 32, 32).transpose(1, 2, 0) for row in four_closest_vectors.values]
+#     # four_closest_vectors = four_closest_vectors.values.reshape(3, 32, 32).transpose(1, 2, 0)
+#     # closest = four_closest_vectors.values[0].reshape(3, 32, 32).transpose(1, 2, 0)
+#     # plt.imshow(closest)
+#     # plt.show()
+#     return reshaped_transposed_list
 
 
 def similar_images_mobileV2_features():
@@ -90,7 +90,6 @@ def similar_images_mobileV2_features():
     new_image_preprocessed = preprocess_input(reshaped_image_array)
     # Create the MobileNetV2 model
     model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
-
     new_image_features = model.predict(new_image_preprocessed)
     new_image_features = new_image_features.flatten()
     distances = []
@@ -167,6 +166,7 @@ def similar_images_cnn_features_cosine():
 
 def similar_images_using_potential():
     global new_image
+    global similar_images_label
     data_features = pd.read_feather('../../data/processed/features_after_CNN.feather')
     data = pd.read_feather('../../data/processed/cifar_10_100.feather')
     reshaped_image_array = new_image.reshape(1, 32, 32, 3)
@@ -186,6 +186,7 @@ def similar_images_using_potential():
     labels = probabilities_indices[-4:]  # Assuming this contains the labels you want
     filtered_data = sorted_data[sorted_data['label'].isin(labels)]
     four_closest_vectors = filtered_data.iloc[:4, 2:]
+    similar_images_label = filtered_data.iloc[:4, 1].tolist()
     return four_closest_vectors
 
 
@@ -201,3 +202,15 @@ def encode_image(image_vector):
     # plt.imshow(base64_image)
     # plt.show()
     return base64_image
+
+
+def find_label_of_similar_image(image_index):
+    if image_index is not None:
+        image_label = similar_images_label[image_index]
+        label = convert_to_category(image_label)
+        return label
+
+
+def is_anomalous():
+    return False
+
