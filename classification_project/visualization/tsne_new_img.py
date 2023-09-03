@@ -4,16 +4,30 @@ import requests
 from io import BytesIO
 from keras.models import Model
 import pickle
+from openTSNE import affinity
+from openTSNE import initialization
 import openTSNE
 import matplotlib.pyplot as plt
 
 
-from classification_project.models.CNN1 import CNN1
+# def preprocess_new_image(image_url, image_size):
+#     # Download the image from the URL with SSL certificate verification disabled
+#     response = requests.get(image_url, verify=False)
+#     new_image = Image.open(BytesIO(response.content)).convert('RGB')
+#
+#     # Resize the image to the specified size
+#     new_image = new_image.resize(image_size)
+#
+#     # Convert the image to a NumPy array and normalize the pixel values to the range [0, 1]
+#     new_image_array = np.array(new_image) / 255.0
+#
+#     return new_image_array
 
-def preprocess_new_image(image_url, image_size):
-    # Download the image from the URL with SSL certificate verification disabled
-    response = requests.get(image_url, verify=False)
-    new_image = Image.open(BytesIO(response.content)).convert('RGB')
+# Load the pre-trained t-SNE model
+
+def preprocess_new_image(image_path, image_size):
+    # Open the image from the local path
+    new_image = Image.open(image_path).convert('RGB')
 
     # Resize the image to the specified size
     new_image = new_image.resize(image_size)
@@ -23,21 +37,17 @@ def preprocess_new_image(image_url, image_size):
 
     return new_image_array
 
-# Load the pre-trained t-SNE model
-tsne_model_path = 'tsne_model.pkl'
+tsne_model_path = 'tsne_model_activation_5.pkl'
 with open(tsne_model_path, 'rb') as f:
     # tsne = pickle.load(f)
-    tsne, initial_embedding = pickle.load(f)
+    tsne = pickle.load(f)
 
-# Load the pre-trained CNN model
-loaded_model = CNN1.load_cnn_model('../saved_model/cnn_model_all_data.keras')
-loaded_history_model = CNN1.load_cnn_history('../saved_model/cnn_history_all_data.pkl')
-
-# Create a feature extractor model
-feat_extractor = Model(inputs=loaded_model.model.input, outputs=loaded_model.model.get_layer('dense').output)
+from keras.models import load_model
+cnn_model = load_model('../saved_models/cnn_model_all_data.keras')
+feat_extractor = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('activation_5').output)
 
 # Preprocess the new image
-new_image_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9XNcX85eNwnU57VRwglb9b67qnGXpsbAIRA&usqp=CAU"
+new_image_url = "../images/horse.jpg"
 new_image_size = (32, 32)
 new_image_array = preprocess_new_image(new_image_url, new_image_size)
 
@@ -45,7 +55,7 @@ new_image_array = preprocess_new_image(new_image_url, new_image_size)
 new_image_features = feat_extractor.predict(np.expand_dims(new_image_array, axis=0))
 
 # Load the pre-computed features and labels for the test set
-test_data_path = 'test_data.pkl'
+test_data_path = 'test_data_activation_5.pkl'
 with open(test_data_path, 'rb') as f:
     test_data = pickle.load(f)
 
@@ -56,10 +66,11 @@ features_with_new = np.concatenate([features, new_image_features], axis=0)
 
 # Apply the pre-trained t-SNE model to the combined features
 test_representations_2d = tsne.fit_transform(features_with_new)
-
+#embedding_test = tsne.prepare_partial(x_test)
 #test_representations_2d = tsne.fit_transform(new_image_features,initialization=initial_embedding)
 
-labels = np.argmax(y_test, axis=1)
+# labels = np.argmax(y_test, axis=1)
+labels = np.array(y_test)
 
 # Get the unique classes from the labels array
 unique_classes = np.unique(labels)
@@ -94,5 +105,3 @@ plt.gca().add_artist(legend1)
 
 # Show the plot
 plt.show()
-
-
