@@ -8,7 +8,7 @@ from openTSNE import affinity
 from openTSNE import initialization
 import openTSNE
 import matplotlib.pyplot as plt
-
+from classification_project.models.CNN1 import CNN1
 
 # def preprocess_new_image(image_url, image_size):
 #     # Download the image from the URL with SSL certificate verification disabled
@@ -37,17 +37,18 @@ def preprocess_new_image(image_path, image_size):
 
     return new_image_array
 
-tsne_model_path = 'tsne_model_activation_5.pkl'
+tsne_model_path = 'tsne_model2.pkl'
+
 with open(tsne_model_path, 'rb') as f:
     # tsne = pickle.load(f)
     tsne = pickle.load(f)
 
 from keras.models import load_model
-cnn_model = load_model('../saved_models/cnn_model_all_data.keras')
-feat_extractor = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('activation_5').output)
+cnn_model = load_model('../saved_models/saved_cnn_model.keras')
+feat_extractor = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense').output)
 
 # Preprocess the new image
-new_image_url = "../images/horse.jpg"
+new_image_url = "../utils/horse14 (2).jpg"
 new_image_size = (32, 32)
 new_image_array = preprocess_new_image(new_image_url, new_image_size)
 
@@ -55,7 +56,8 @@ new_image_array = preprocess_new_image(new_image_url, new_image_size)
 new_image_features = feat_extractor.predict(np.expand_dims(new_image_array, axis=0))
 
 # Load the pre-computed features and labels for the test set
-test_data_path = 'test_data_activation_5.pkl'
+test_data_path = 'test_data2.pkl'
+
 with open(test_data_path, 'rb') as f:
     test_data = pickle.load(f)
 
@@ -105,3 +107,4 @@ plt.gca().add_artist(legend1)
 
 # Show the plot
 plt.show()
+

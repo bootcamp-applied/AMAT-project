@@ -71,8 +71,11 @@ def is_anomalysis(image):
     else:
         return "anomaly"
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
 def convert_to_category(label):
     map_label = '../utils/dict.json'
     with open(map_label, 'r') as f:
@@ -117,7 +120,6 @@ def similar_images_mobileV2_features():
     new_image_preprocessed = preprocess_input(reshaped_image_array)
     # Create the MobileNetV2 model
     model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
-
     new_image_features = model.predict(new_image_preprocessed)
     new_image_features = new_image_features.flatten()
     distances = []
@@ -196,7 +198,11 @@ def similar_images_using_potential():
     global new_image
     global similar_images_label
     data_features = pd.read_feather('../../data/processed/features_after_CNN.feather')
+<<<<<<< HEAD
     data = pd.read_feather('../../data/processed/cifar_10_100_augmentation.feather')
+=======
+    data = pd.read_feather('../../data/processed/cifar_10_100.feather')
+>>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
     reshaped_image_array = new_image.reshape(1, 32, 32, 3)
     model = CNN.load_cnn_model('../saved_models/cnn_model_all_data.keras').model
     preprocessed_image = preprocess_input(reshaped_image_array)
@@ -237,3 +243,11 @@ def find_label_of_similar_image(image_index):
         image_label = similar_images_label[image_index]
         label = convert_to_category(image_label)
         return label
+<<<<<<< HEAD
+=======
+
+
+def is_anomalous():
+    return False
+
+>>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae

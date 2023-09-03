@@ -79,7 +79,12 @@ class Visualization:
         #ax[1].imshow(new_img)
         #ax[1].set_title("New Image")
         #plt.show()
-        pass
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 10))
+        ax[0].imshow(img)
+        ax[0].set_title('Original Image')
+        ax[1].imshow(new_img)
+        ax[1].set_title("New Image")
+        # plt.show()
 
     # Function to plot the ROC Curve
     @staticmethod
