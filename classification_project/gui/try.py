@@ -30,12 +30,10 @@ app.layout = html.Div(
         'flex-direction': 'column',
         'align-items': 'center',
         'justify-content': 'center',
-<<<<<<< HEAD
         'height': '100vh'
     },
     children=[
         html.H1("Welcome to our Image Classifier", style={'text-align': 'center', 'margin-bottom': '20px'}),
-=======
         'height': '100vh',
         'background-color': 'gray',  # Set your desired background color here
         'overflow-y': 'auto'
@@ -44,18 +42,16 @@ app.layout = html.Div(
         html.H1("Welcome to our Image Classifier",
                 style={'text-align': 'center', 'margin-bottom': '20px', 'display': 'block', 'font-size': '50px',
                        'color': 'white', 'text-shadow': '4px 4px 6px #000000'}),
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
         dcc.Upload(id='upload-data', children=html.Button('Upload Image'), style={'margin-bottom': '20px'}),
 
         html.Div(
             id='uploaded-image-container',
-<<<<<<< HEAD
             style={'text-align': 'center', 'border': '2px solid black'},
             children=[
-=======
             style={'text-align': 'center', 'border': '4px solid black', 'box-shadow': '0px 0px 10px rgba(0, 0, 0, 1.5)'},
         children=[
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
+            style={'text-align': 'center', 'border': '4px solid black', 'box-shadow': '0px 0px 10px rgba(0, 0, 0, 1.5)'},
+        children=[
                 dcc.Graph(id='uploaded-image', config={'doubleClick': 'reset'})
             ]
         ),
@@ -64,11 +60,9 @@ app.layout = html.Div(
         html.H2(id='label-after-crop', style={'text-align': 'center', 'margin-top': '20px'}),
         confirmation_section,
         html.Div(id='similar-images-heading', children=[
-<<<<<<< HEAD
             html.H2("Give us another chance", style={'text-align': 'center', 'margin-top': '20px'}),
-=======
             html.H2("Give us another chance", style={'text-align': 'center', 'margin-top': '-20px'}),
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
+            html.H2("Give us another chance", style={'text-align': 'center', 'margin-top': '-20px'}),
             html.H2("Explore similar images from our training set. Click the button above the image with the same label",
                     style={'text-align': 'right', 'margin-bottom': '20px', 'font-size': '18px'})
         ]),
@@ -78,10 +72,6 @@ app.layout = html.Div(
         ),
         html.H2(id='clicked-image-store', style={'text-align': 'center', 'margin-top': '20px'}),
         # html.Div(id='label-display')
-<<<<<<< HEAD
-=======
-
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
     ]
 )
 
@@ -122,7 +112,6 @@ fig.update_layout(
 )
 
 
-<<<<<<< HEAD
 # @app.callback(
 #     [Output(component_id='image-label', component_property='children'),
 #      Output(component_id='uploaded-image', component_property='data')],
@@ -135,8 +124,6 @@ fig.update_layout(
 #         label = gui_utils.predict_label(formated_image)
 #         label_mes = f'Your image label is: {label}'
 #     return label_mes, contents
-=======
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
 
 
 # Callback to update uploaded image
@@ -150,12 +137,10 @@ def classify_label(contents):
     label_mes = ''
     if contents is not None:
         formated_image = gui_utils.format_image(contents)
-<<<<<<< HEAD
         label = gui_utils.is_anomalysis(formated_image)
         label_mes = f'Your image label is: {label}'
         print(label)
     return label_mes, contents
-=======
         label = gui_utils.predict_label(formated_image)
         if not gui_utils.is_anomalous():
             underlined_label = "\u0332".join(label)
@@ -165,7 +150,6 @@ def classify_label(contents):
         print(label)
     return label_mes, contents
 
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
 @app.callback(
     [Output('uploaded-image', 'figure'),
      Output('label-after-crop', 'children')],
@@ -214,18 +198,15 @@ def update_uploaded_image(contents,relayoutData, filename):
         image_data = base64.b64decode(encoded_image.split(',')[1])
         pillow_image = Image.open(io.BytesIO(image_data))
         output_filename = 'output_image.png'
-<<<<<<< HEAD
         pillow_image.save(output_filename, format='PNG')
         formated_image = gui_utils.format_image(encoded_image)
         label = gui_utils.predict_label(formated_image)
         label_after_crop = f'Your image label after crop is: {label}'
-=======
         cropped_image.save(output_filename, format='PNG')
         formated_image = gui_utils.format_image(encoded_image)
         label = gui_utils.predict_label(formated_image)
         underlined_label = "\u0332".join(label)
         label_after_crop = f'Your image label after crop is: {underlined_label}'
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
         print(label)
         return fig, label_after_crop
         print(6)
@@ -249,7 +230,6 @@ def update_uploaded_image(contents,relayoutData, filename):
              ]
          )
     return fig, label_after_crop
-<<<<<<< HEAD
 # @app.callback(
 #     Output('dummy-output', 'children'),
 #
@@ -269,9 +249,6 @@ def update_uploaded_image(contents,relayoutData, filename):
 #             plt.imshow(image)
 #             plt.show()
 #
-=======
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
-
 
 def create_image_div(similarity_phrase, img_vector):
     img_pil = gui_utils.decode_image(img_vector)  # Assuming you have a function to decode the image vector
@@ -322,7 +299,6 @@ def update_similar_images(label_mes):
 
     return heading_style, similar_images_container
 
-<<<<<<< HEAD
 #
 # def update_similar_images(label_mes):
 #     similar_images_container = None
@@ -351,11 +327,12 @@ def update_similar_images(label_mes):
 #     return heading_style, similar_images_container
 
 # to ask if we were right only when it predicted
-=======
 
 # to ask if we were right only when it predicted
 # Update your toggle_confirmation_section callback
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
+
+# to ask if we were right only when it predicted
+# Update your toggle_confirmation_section callback
 @app.callback(
     Output('confirmation-section', 'style'),
     [Input('image-label', 'children'),
@@ -373,7 +350,6 @@ def toggle_confirmation_section(image_label, n_clicks_yes, n_clicks_no):
     else:
         return {'display': 'none'}
 
-<<<<<<< HEAD
 # to plot the similar images if "no" is pressed
 # @app.callback(
 #     [Output('clicked-image-store', 'data'),
@@ -444,7 +420,6 @@ def toggle_confirmation_section(image_label, n_clicks_yes, n_clicks_no):
 #         return non_null_value, label
 #     else:
 #         return dash.no_update, None
-=======
 # Add a callback to reset n_clicks when the "Upload" button is clicked
 @app.callback(
     Output('confirm-yes', 'n_clicks'),
@@ -458,7 +433,6 @@ def reset_clicks_on_upload(contents):
     return dash.no_update, dash.no_update
 
 
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
 index_set = False
 @app.callback(
     Output('clicked-image-store', component_property='children'),  # Store the clicked image index
@@ -475,16 +449,13 @@ def store_clicked_ranking_index(n_clicks_list):
     if any(n_clicks is not None for n_clicks in n_clicks_list):
         non_null_index = next(i for i in range(len(n_clicks_list)) if n_clicks_list[i] is not None)
         label = gui_utils.find_label_of_similar_image(non_null_index)
-<<<<<<< HEAD
         print(label)
         index_set = True
         return f"Based on the image you selected, your label is {label}"
-=======
         underlined_label = "\u0332".join(label)
         print(label)
         index_set = True
         return f"Based on the image you selected, your label is {underlined_label}"
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
     else:
         return dash.no_update
 

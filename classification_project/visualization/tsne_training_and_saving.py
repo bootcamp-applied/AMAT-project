@@ -56,13 +56,10 @@ from sklearn.manifold import TSNE
 from PIL import Image
 from keras.models import Model
 import pickle
-<<<<<<< HEAD
 from keras.models import load_model
-=======
 
 from classification_project.preprocessing.preprocessing import Preprocessing
-from classification_project.models.CNN1 import CNN
->>>>>>> 77badf082da1f688e173a30a10d8fb7b65deafae
+from classification_project.models.CNN1 import CNN1
 
 def preprocess_new_image(image_path, image_size):
     # Load the image from the given path and convert it to RGB mode
@@ -78,14 +75,13 @@ def preprocess_new_image(image_path, image_size):
 
 # Load the dataset and prepare the data
 df = pd.read_csv('../../data/processed/cifar-10-100-augmentation.csv', dtype='int')
-
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
 
 # Load the pre-trained CNN model
-loaded_model = CNN.load_cnn_model('../saved_models/saved_cnn_model.keras')
-loaded_history_model = CNN.load_cnn_history('../saved_models/saved_cnn_model.pkl')
+loaded_model = CNN1.load_cnn_model('../saved_models/saved_cnn_model.keras')
+loaded_history_model = CNN1.load_cnn_history('../saved_models/saved_cnn_model.pkl')
 
 # Create a feature extractor model
 feat_extractor = Model(inputs=loaded_model.model.input, outputs=loaded_model.model.get_layer('dense').output)

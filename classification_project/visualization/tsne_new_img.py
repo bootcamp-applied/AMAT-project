@@ -10,6 +10,7 @@ import openTSNE
 import matplotlib.pyplot as plt
 from classification_project.models.CNN1 import CNN1
 
+
 # def preprocess_new_image(image_url, image_size):
 #     # Download the image from the URL with SSL certificate verification disabled
 #     response = requests.get(image_url, verify=False)
@@ -46,6 +47,7 @@ with open(tsne_model_path, 'rb') as f:
 from keras.models import load_model
 cnn_model = load_model('../saved_models/saved_cnn_model.keras')
 feat_extractor = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense').output)
+
 
 # Preprocess the new image
 new_image_url = "../utils/horse14 (2).jpg"
