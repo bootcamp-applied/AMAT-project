@@ -8,9 +8,8 @@ from openTSNE import affinity
 from openTSNE import initialization
 import openTSNE
 import matplotlib.pyplot as plt
+from classification_project.models.CNN1 import CNN1
 
-
-from classification_project.models.CNN1 import CNN
 
 # def preprocess_new_image(image_url, image_size):
 #     # Download the image from the URL with SSL certificate verification disabled
@@ -40,16 +39,15 @@ def preprocess_new_image(image_path, image_size):
     return new_image_array
 
 tsne_model_path = 'tsne_model2.pkl'
+
 with open(tsne_model_path, 'rb') as f:
     # tsne = pickle.load(f)
     tsne = pickle.load(f)
 
-# Load the pre-trained CNN model
-loaded_model = CNN.load_cnn_model('../saved_models/saved_cnn_model.keras')
-loaded_history_model = CNN.load_cnn_history('../saved_models/saved_cnn_history.pkl')
+from keras.models import load_model
+cnn_model = load_model('../saved_models/saved_cnn_model.keras')
+feat_extractor = Model(inputs=cnn_model.input, outputs=cnn_model.get_layer('dense').output)
 
-# Create a feature extractor model
-feat_extractor = Model(inputs=loaded_model.model.input, outputs=loaded_model.model.get_layer('dense').output)
 
 # Preprocess the new image
 new_image_url = "../utils/horse14 (2).jpg"
@@ -61,6 +59,7 @@ new_image_features = feat_extractor.predict(np.expand_dims(new_image_array, axis
 
 # Load the pre-computed features and labels for the test set
 test_data_path = 'test_data2.pkl'
+
 with open(test_data_path, 'rb') as f:
     test_data = pickle.load(f)
 
@@ -74,7 +73,8 @@ test_representations_2d = tsne.fit_transform(features_with_new)
 #embedding_test = tsne.prepare_partial(x_test)
 #test_representations_2d = tsne.fit_transform(new_image_features,initialization=initial_embedding)
 
-labels = np.argmax(y_test, axis=1)
+# labels = np.argmax(y_test, axis=1)
+labels = np.array(y_test)
 
 # Get the unique classes from the labels array
 unique_classes = np.unique(labels)

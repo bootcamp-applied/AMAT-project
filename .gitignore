@@ -6,6 +6,8 @@ new/
 presentation.pptx
 saved_models/
 saved_model/
+images/
+*.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
