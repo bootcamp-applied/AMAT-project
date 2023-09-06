@@ -13,8 +13,9 @@ if __name__ == '__main__':
     # cifar_10_100_merged = DataHandlerCifar10Cifar100()
     # cifar_10_100_merged.load_data_to_csv()
 
-    # df_10_100_augmentation=DataHandlerCifar10Cifar100Augmentation()
-    # df_10_100_augmentation.load_data_to_csv()
+    df_10_100_augmentation = DataHandlerCifar10Cifar100Augmentation()
+    df_10_100_augmentation.load_data_to_csv()
 
-    df_all=DataHandlerCifar10Cifar100AllAugmentation()
-    df_all.load_data_to_csv()
+    #df_all = DataHandlerCifar10Cifar100AllAugmentation()
+
+    #df_all.load_data_to_csv()

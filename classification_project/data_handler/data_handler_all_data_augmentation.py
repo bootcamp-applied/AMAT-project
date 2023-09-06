@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import pyarrow.feather as feather
 
 class DataHandlerCifar10Cifar100AllAugmentation:
     def __init__(self):
@@ -8,10 +9,10 @@ class DataHandlerCifar10Cifar100AllAugmentation:
 
     def read_from_csv(self):
         path_augmentation = '../../data/processed/all_augmentation.csv'
-        path_cifar_10_100='../../data/processed/cifar-10-100-augmentation.csv'
-        df_cifar_10_100=pd.read_csv(path_cifar_10_100)
-        df_augmentation = pd.read_csv(path_augmentation)
-        return df_cifar_10_100,df_augmentation
+        path_cifar_10_100 ='../../data/processed/cifar_10_100_augmentation.feather'
+        df_cifar_10_100 = pd.read_csv(path_cifar_10_100)
+        df_augmentation = feather.read_dataframe(path_augmentation)
+        return df_cifar_10_100, df_augmentation
 
     # without sub class
     def load_data_to_csv(self):

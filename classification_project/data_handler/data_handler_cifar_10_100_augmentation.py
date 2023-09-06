@@ -8,10 +8,10 @@ class DataHandlerCifar10Cifar100Augmentation:
 
     def read_from_csv(self):
         path_augmentation = '../../data/processed/augmentation.csv'
-        path_cifar_10_100='../../data/processed/cifar_10_100.csv'
-        df_cifar_10_100=pd.read_csv(path_cifar_10_100)
+        path_cifar_10_100 ='../../data/processed/cifar_10_100.csv'
+        df_cifar_10_100 =pd.read_csv(path_cifar_10_100)
         df_augmentation = pd.read_csv(path_augmentation)
-        return df_cifar_10_100,df_augmentation
+        return df_cifar_10_100, df_augmentation
 
     # without sub class
     def load_data_to_csv(self):

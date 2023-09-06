@@ -4,12 +4,12 @@ from classification_project.preprocessing.preprocessing import Preprocessing
 from classification_project.try_new_model.CNN_16class import CNN
 from classification_project.try_new_model.data import DataToOtherModel
 
+
 DataToOtherModel.prepare()
 df = pd.read_feather('../../data/processed/cifar_10_100_all.feather')
 preprocessing = Preprocessing(df)
 preprocessing.prepare_data()
 x_train, y_train, x_val, y_val, x_test, y_test = preprocessing.split_data(one_hot_encoder=True)
-
 cnn_model = CNN()
 history = cnn_model.train(x_train, y_train, x_val, y_val)
 
@@ -18,7 +18,7 @@ print("Test accuracy:", accuracy)
 
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
-model_name = 'keras_all_data_trained_model.h5'
+model_name = 'keras_all_data_trained_model_16_classes.h5'
 
 # Save model and weights
 if not os.path.isdir(save_dir):
